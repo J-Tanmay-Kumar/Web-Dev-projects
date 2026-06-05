@@ -1,0 +1,307 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    color: white;
+    background: #242424;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* CHECK_BOX */
+.gradient {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.5;
+}
+
+/* SHADOW OVER CHECKBOX */
+.shadow {
+    position: absolute;
+    width: 300px;
+    top: 10%;
+    right: 0;
+    box-shadow: 0 0 300px 10px white;
+    rotate: calc(-30deg);
+}
+
+.gradient,
+.shadow {
+    pointer-events: none;
+}
+
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+/* RIGHT SECTION */
+.logo {
+    font-size: 35px;
+    font-style: bold;
+    font-weight: 400;
+    animation: inspite 1s ease-out forwards;
+    /* transform: translateX(100px); */
+}
+
+@keyframes inspite {
+    from {
+        transform: translateX(0px)
+    }
+
+    to {
+        transform: translateX(50px);
+    }
+}
+
+
+
+/* LEFT_SECTION */
+
+
+.left {
+    padding-right: 10px;
+    display: flex;
+    gap: 30px;
+}
+
+.left>ul {
+    display: flex;
+    list-style: none;
+    /* justify-content: space-between; */
+    align-items: center;
+    gap: 25px;
+}
+
+
+.left>ul>li>a {
+    text-decoration: none;
+    color: white;
+    transition: 1s;
+}
+
+
+
+/* HOVER EFFECT ERROR!! */
+.left>ul>li>a:hover {
+    padding: 5px 10px 5px 10px;
+    border-radius: 7px;
+    background-color: black;
+    color: white;
+
+
+}
+
+
+/* CONTACT - BUTTON  */
+.contact-btn {
+    border: none;
+    padding: 7px 22px;
+    border-radius: 50px;
+    text-decoration: none;
+    background-color: aqua;
+}
+
+.contact-btn>a {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+}
+
+
+
+
+
+/* MAIN SECTION _LECT SIDE */
+
+.content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+.content>img {
+    padding-top: 10px;
+    border-radius: 50%;
+    max-width: 80vh;
+    padding-bottom: 10px;
+
+}
+
+.stack {
+    display: flex;
+    font-family: "Poppins", sans-serif;
+}
+
+.info {
+    padding: 10px 0px 10px 0px;
+}
+
+.info>p {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.specialization {
+    padding: 10px 0px 10px 0px;
+}
+
+.specialization>p {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+
+
+.connect {
+    padding: 10px 0px 10px 0px;
+}
+
+
+.connect-btn {
+    padding: 10px 5px 10px 5px;
+    border-radius: 10px;
+    border-style: none;
+    background-color: aqua;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+}
+
+
+/* MAIN TESTRIMONY  */
+
+.border {
+    margin-top: 10vh;
+    position: relative;
+    height: 2px;
+    background-color: black;
+}
+
+.border{
+pointer-events: none;
+}
+
+.testrimony {
+    padding-top: 10vh;
+    font-family: "Poppins", sans-serif;
+    padding-left: 50px;
+}
+
+
+/* boxes - section */
+.boxes {
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 10vh;
+}
+
+.box-1 {
+    width: 275px;
+    height: 200px;
+    border: 1px solid black;
+    padding: 25px 30px 30px 30px;
+    background-color: rgb(19, 19, 19);
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+
+.box-1>p{
+    font-size: 15px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.box-1>h4{
+    font-family: "Poppins", sans-serif;
+}
+
+.box-1:hover {
+    cursor: pointer;
+    box-shadow:  3px 5px 10px aliceblue;
+    transform: translateY(-5px);
+    border: 1.5px solid white ;
+}
+
+/* PROJECT SECTION */
+
+.pro{
+   display: flex;
+   padding-top: 20px;
+   padding-left: 20px;
+}
+
+.pro-1{
+    border-radius: 5px;
+    padding: 10px 5px 0px 5px;
+    background-color: rgb(19, 19, 19);
+}
+
+.top{
+    display: flex;
+    object-fit:contain;
+    border-radius:5px ;
+}
+
+.bottom{
+    padding-top: 3px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.bottom>h5{
+    color: white;
+}
+.bottom>a{
+    color:white;
+}
+
+.h3{
+     font-family: "Poppins", sans-serif;
+}
+  
+/* FOOTER */
+.copy{
+    display: flex;
+    justify-content: center;
+    padding-top: 75px;
+}
+
+.social{
+    display: flex;
+    justify-content: center;
+}
+
+.icons{
+    padding-top: 10px;
+    display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  padding-bottom: 100px;
+}
+
+
+.git>a{
+    color: white;
+    text-decoration: none;
+}
+
+.link>a{
+    color: white;
+    text-decoration: none;
+}
+
+.insta>a{
+    color: white;
+    text-decoration: none;
+}

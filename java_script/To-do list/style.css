@@ -1,0 +1,103 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    background-color: #121212;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    min-height: 100vh;
+
+    padding-top: 60px;
+}
+
+h2{
+    margin-bottom: 25px;
+    font-size: 2rem;
+}
+
+.to-do-input{
+    width: 320px;
+    padding: 12px;
+
+    border: none;
+    outline: none;
+
+    border-radius: 8px;
+
+    font-size: 1rem;
+
+    margin-bottom: 15px;
+}
+
+.btn{
+    padding: 12px 20px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #4caf50;
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 1rem;
+    font-weight: bold;
+
+    transition: 0.3s;
+
+    margin-bottom: 25px;
+}
+
+.btn:hover{
+    background-color: #43a047;
+}
+
+#container{
+    width: 400px;
+
+    list-style: none;
+}
+
+#container li{
+    background-color: #1f1f1f;
+
+    padding: 12px 15px;
+
+    margin-bottom: 12px;
+
+    border-radius: 8px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 1rem;
+}
+
+#container li button{
+    background-color: crimson;
+
+    border: none;
+
+    color: white;
+
+    padding: 8px 12px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+#container li button:hover{
+    background-color: rgb(177, 11, 44);
+}
