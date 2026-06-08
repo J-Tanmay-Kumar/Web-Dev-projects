@@ -29,36 +29,44 @@ document.body.querySelector('.add-btn').addEventListener("click", () => {
     expenseDate.value = '';
     expenseCategory.value='';
     console.log(expense)
+    
+        const Deletebtn = document.querySelectorAll('.js-del-btn')
+        Deletebtn.forEach((button,index)=>{
+            const Index = button.dataset.index
+            button.addEventListener("click",()=>{
+                expense.splice(Index,1)
+                renderexpense()
+            })
+        })
 })
 
 let tableHtml = '';
 function renderexpense() {
     tableHtml=`
     <table> 
-           <tr>
-                <th>Expense-Name</th>
-                <th>Amount</th>
+    <tr>
+    <th>Expense-Name</th>
+    <th>Amount</th>
                 <th>Date</th>
                 <th>cateogory</th>
                 <th>Action</th>
-            </tr>
-    `
-    expense.forEach((e) => {
+                </tr>
+                `
+                expense.forEach((e,index) => {
         tableHtml+=`
-            <tr>
-                <td>${e.name}</td>
-                <td>${e.amount}</td>
-                <td>${e.date}</td>
-                <td>${e.category}</td>
-                <td>
-                    <button>edit</button>
-                    <button>Delete</button>
-                </td>
-            </tr>
+        <tr>
+        <td>${e.name}</td>
+        <td>${e.amount}</td>
+        <td>${e.date}</td>
+        <td>${e.category}</td>  
+        <td>
+        <button>edit</button>
+        <button class="js-del-btn" data-Index="${index}">Delete</button>
+        </td>
+        </tr>
         `
     })
     tableHtml+=
     `</table>`
-document.body.querySelector('.body').innerHTML = tableHtml;
+    document.body.querySelector('.body').innerHTML = tableHtml;
 }
-
