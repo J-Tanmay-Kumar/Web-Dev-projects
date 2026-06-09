@@ -8,7 +8,14 @@
     font-size: large;
     text-align: center;
 }
-
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
 .head {
     display: grid;
     grid-template-columns: 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;
@@ -21,6 +28,12 @@ table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 70%;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
 td, th {

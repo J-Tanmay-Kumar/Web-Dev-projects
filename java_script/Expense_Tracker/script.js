@@ -27,22 +27,14 @@ document.body.querySelector('.add-btn').addEventListener("click", () => {
     expenseName.value = '';
     expenseAmount.value = '';
     expenseDate.value = '';
-    expenseCategory.value='';
+    expenseCategory.value = '';
     console.log(expense)
-    
-        const Deletebtn = document.querySelectorAll('.js-del-btn')
-        Deletebtn.forEach((button,index)=>{
-            const Index = button.dataset.index
-            button.addEventListener("click",()=>{
-                expense.splice(Index,1)
-                renderexpense()
-            })
-        })
+    // delAction();
 })
 
 let tableHtml = '';
 function renderexpense() {
-    tableHtml=`
+    tableHtml = `
     <table> 
     <tr>
     <th>Expense-Name</th>
@@ -52,8 +44,8 @@ function renderexpense() {
                 <th>Action</th>
                 </tr>
                 `
-                expense.forEach((e,index) => {
-        tableHtml+=`
+    expense.forEach((e, index) => {
+        tableHtml += `
         <tr>
         <td>${e.name}</td>
         <td>${e.amount}</td>
@@ -66,7 +58,21 @@ function renderexpense() {
         </tr>
         `
     })
-    tableHtml+=
-    `</table>`
+    tableHtml +=
+        `</table>`
     document.body.querySelector('.body').innerHTML = tableHtml;
+    delAction()
+}
+
+function delAction() {
+    const Deletebtn = document.querySelectorAll('.js-del-btn')
+    Deletebtn.forEach((button) => {
+        const Index = button.dataset.index
+        console.log(Index)
+        button.addEventListener("click", () => {
+            console.log("clicked");
+            expense.splice(Index, 1);
+            renderexpense()
+        })
+    })
 }
