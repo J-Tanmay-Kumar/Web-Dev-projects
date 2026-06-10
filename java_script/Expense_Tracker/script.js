@@ -7,13 +7,10 @@ const expense = []
 
 document.body.querySelector('.add-btn').addEventListener("click", () => {
     let expenseInput = expenseName.value;
-    console.log(expenseInput)
     let amountInput = expenseAmount.value;
-    console.log(amountInput)
     let DateInput = expenseDate.value;
-    console.log(DateInput);
     let categoryInput = expenseCategory.value;
-    console.log(categoryInput)
+
 
     expense.push(
         {
@@ -28,8 +25,6 @@ document.body.querySelector('.add-btn').addEventListener("click", () => {
     expenseAmount.value = '';
     expenseDate.value = '';
     expenseCategory.value = '';
-    console.log(expense)
-    // delAction();
 })
 
 let tableHtml = '';
@@ -44,35 +39,43 @@ function renderexpense() {
                 <th>Action</th>
                 </tr>
                 `
-    expense.forEach((e, index) => {
-        tableHtml += `
-        <tr>
-        <td>${e.name}</td>
-        <td>${e.amount}</td>
-        <td>${e.date}</td>
-        <td>${e.category}</td>  
-        <td>
-        <button>edit</button>
-        <button class="js-del-btn" data-Index="${index}">Delete</button>
-        </td>
-        </tr>
-        `
-    })
-    tableHtml +=
-        `</table>`
-    document.body.querySelector('.body').innerHTML = tableHtml;
-    delAction()
+                expense.forEach((e, index) => {
+                    tableHtml += `
+                    <tr>
+                    <td>${e.name}</td>
+                    <td>${e.amount}</td>
+                    <td>${e.date}</td>
+                    <td>${e.category}</td>  
+                    <td>
+                    <button class="js-edit-btn">edit</button>
+                    <button class="js-del-btn" data-Index="${index}">Delete</button>
+                    </td>
+                    </tr>
+                    `
+                })
+                tableHtml +=
+                `</table>`
+                document.body.querySelector('.body').innerHTML = tableHtml;
+                delAction()
+                rendertotal()
 }
 
 function delAction() {
     const Deletebtn = document.querySelectorAll('.js-del-btn')
     Deletebtn.forEach((button) => {
         const Index = button.dataset.index
-        console.log(Index)
         button.addEventListener("click", () => {
-            console.log("clicked");
             expense.splice(Index, 1);
             renderexpense()
+            rendertotal()
         })
     })
+}
+
+function rendertotal(){
+    let total=0;
+    expense.forEach((e)=>{
+        total+=Number(e.amount)
+    })
+    document.body.querySelector('.bottom').innerHTML=`Total:$${total}`;
 }

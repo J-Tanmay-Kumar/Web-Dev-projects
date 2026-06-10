@@ -3,11 +3,17 @@
     padding: 0;
 }
 
+body{
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+}
+
 .h3{
     font-weight: bold;
     font-size: large;
-    text-align: center;
+    margin-top: 10px;
 }
+
 .container {
     max-width: 800px;
     margin: 50px auto;
@@ -40,4 +46,40 @@ td, th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
+}
+
+.js-del-btn{
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.js-del-btn:hover{
+    cursor: pointer;
+}
+
+.add-btn{
+    background-color: green;
+    color: #fff;  border: none;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.js-edit-btn{
+    background-color: rgb(58, 57, 57);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.js-edit-btn:hover{
+    cursor: pointer;
+}
+
+.bottom{
+    width: 80%;
+    text-align: end;
 }
