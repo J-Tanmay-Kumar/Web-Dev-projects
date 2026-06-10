@@ -3,7 +3,7 @@ let expenseAmount = document.body.querySelector('.js-expense-amount')
 let expenseDate = document.body.querySelector('.js-expense-date')
 let expenseCategory = document.body.querySelector('.js-category')
 
-const expense = []
+const expense = JSON.parse(localStorage.getItem('Expense')) || [];
 
 document.body.querySelector('.add-btn').addEventListener("click", () => {
     let expenseInput = expenseName.value;
@@ -20,6 +20,7 @@ document.body.querySelector('.add-btn').addEventListener("click", () => {
             category: categoryInput,
         }
     )
+    localStorage.setItem('Expense', JSON.stringify(expense))
     renderexpense()
     expenseName.value = '';
     expenseAmount.value = '';
@@ -34,30 +35,30 @@ function renderexpense() {
     <tr>
     <th>Expense-Name</th>
     <th>Amount</th>
-                <th>Date</th>
-                <th>cateogory</th>
-                <th>Action</th>
-                </tr>
-                `
-                expense.forEach((e, index) => {
-                    tableHtml += `
-                    <tr>
-                    <td>${e.name}</td>
-                    <td>${e.amount}</td>
-                    <td>${e.date}</td>
-                    <td>${e.category}</td>  
-                    <td>
-                    <button class="js-edit-btn">edit</button>
-                    <button class="js-del-btn" data-Index="${index}">Delete</button>
-                    </td>
-                    </tr>
-                    `
-                })
-                tableHtml +=
-                `</table>`
-                document.body.querySelector('.body').innerHTML = tableHtml;
-                delAction()
-                rendertotal()
+    <th>Date</th>
+    <th>cateogory</th>
+    <th>Action</th>
+    </tr>
+    `
+    expense.forEach((e, index) => {
+        tableHtml += `
+        <tr>
+        <td>${e.name}</td>
+        <td>${e.amount}</td>
+        <td>${e.date}</td>
+        <td>${e.category}</td>  
+        <td>
+        <button class="js-edit-btn">edit</button>
+        <button class="js-del-btn" data-Index="${index}">Delete</button>
+        </td>
+        </tr>
+        `
+    })
+    tableHtml +=
+        `</table>`
+    document.body.querySelector('.body').innerHTML = tableHtml;
+    delAction()
+    rendertotal()
 }
 
 function delAction() {
@@ -66,16 +67,22 @@ function delAction() {
         const Index = button.dataset.index
         button.addEventListener("click", () => {
             expense.splice(Index, 1);
+            localStorage.setItem(
+                'Expense',
+                JSON.stringify(expense)
+            );
             renderexpense()
             rendertotal()
         })
     })
 }
 
-function rendertotal(){
-    let total=0;
-    expense.forEach((e)=>{
-        total+=Number(e.amount)
+function rendertotal() {
+    let total = 0;
+    expense.forEach((e) => {
+        total += Number(e.amount)
     })
-    document.body.querySelector('.bottom').innerHTML=`Total:$${total}`;
+    document.body.querySelector('.bottom').innerHTML = `Total:$${total}`;
 }
+
+renderexpense()
