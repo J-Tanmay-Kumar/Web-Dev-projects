@@ -48,16 +48,17 @@ function renderexpense() {
         <td>${e.date}</td>
         <td>${e.category}</td>  
         <td>
-        <button class="js-edit-btn">edit</button>
+        <button class="js-edit-btn" data-Index=${index}>edit</button>
         <button class="js-del-btn" data-Index="${index}">Delete</button>
         </td>
         </tr>
         `
     })
     tableHtml +=
-        `</table>`
+    `</table>`
     document.body.querySelector('.body').innerHTML = tableHtml;
     delAction()
+    editAction()
     rendertotal()
 }
 
@@ -76,6 +77,18 @@ function delAction() {
         })
     })
 }
+
+function editAction(){
+    const Editbtn = document.querySelectorAll('.js-edit-btn')
+    Editbtn.forEach((button)=>{
+        const Index = button.dataset.index
+        button.addEventListener("click",()=>{
+            console.log(Index)
+            document.body.querySelector('#Edit-expense-name').value=expense[Index].name;
+        })
+    })
+}
+
 
 function rendertotal() {
     let total = 0;
