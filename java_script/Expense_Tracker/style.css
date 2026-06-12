@@ -83,3 +83,65 @@ td, th {
     width: 80%;
     text-align: end;
 }
+
+.End {
+    width: 80%;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.End h4 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-align: center;
+}
+
+.End form {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.top,
+.mid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 50%;
+}
+
+.top input,
+.mid input,
+.mid select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+.top input:focus,
+.mid input:focus,
+.mid select:focus {
+    border-color: #4CAF50;
+}
+
+.save-btn {
+    display: block;
+    margin: 25px auto 0;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.save-btn:hover {
+    background-color: #45a049;
+}
