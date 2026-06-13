@@ -123,5 +123,103 @@ cd "Clone/netflix clone"
 - [ ] Improve mobile layout for very small screens (< 400px)
 
 ---
+# ✂️ Rock Paper Scissors
 
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![localStorage](https://img.shields.io/badge/localStorage-Persistent-orange?style=flat)
+
+A browser-based Rock Paper Scissors game with score tracking, auto-play mode, and keyboard shortcuts — built with vanilla JavaScript.
+
+> 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+
+---
+
+## 🎮 How to Play
+
+| Action | Method |
+|---|---|
+| Pick Rock | Click **Rock** button or press `R` |
+| Pick Paper | Click **Paper** button or press `P` |
+| Pick Scissors | Click **Scissors** button or press `S` |
+| Auto-play | Click **Auto-play** (plays every 2 seconds) |
+| Reset scores | Click **Reset-Score** |
+
+---
+
+## ✨ Features
+
+- ✅ Play against a random computer move
+- ✅ Live scoreboard (Wins / Losses / Ties)
+- ✅ Score persists across page refreshes using `localStorage`
+- ✅ Auto-play mode — computer vs computer every 2 seconds
+- ✅ Keyboard shortcuts (`R`, `P`, `S`)
+- ✅ Reset button wipes the score and clears storage
+- ✅ Dark theme UI with hover animations on buttons
+
+---
+
+## 🧠 Algorithm — step by step
+
+**Step 1 — Load saved score**  
+On page load, `localStorage.getItem('scored')` is parsed. If no saved data exists, score defaults to `{ win: 0, lose: 0, tie: 0 }`.
+
+**Step 2 — Generate computer move**  
+`Math.random()` returns a number between 0 and 1. It's split into three equal ranges:
+- `0 to 1/3` → rock  
+- `1/3 to 2/3` → paper  
+- `2/3 to 1` → scissors
+
+**Step 3 — Determine result**  
+The player's move is compared against the computer's move using three conditions — tie, lose, or win. All nine possible matchups are covered explicitly.
+
+**Step 4 — Update score**  
+The matching counter (`win`, `lose`, or `tie`) increments by 1. The updated score object is saved back to `localStorage` with `JSON.stringify`.
+
+**Step 5 — Render to scoreboard**  
+A dynamically created `<div>` (ScoreBoard) updates its `innerHTML` to show the latest picks, result, and running totals.
+
+**Step 6 — Auto-play mode**  
+Clicking Auto-play runs `setInterval(move, 2000)` — it generates a random player move and calls `playGame()` every 2 seconds. Clicking Stop-play calls `clearInterval(id)` to halt it.
+
+**Step 7 — Keyboard input**  
+A `keydown` listener on `document.body` maps `R`, `P`, and `S` keys directly to `playGame()` calls.
+
+**Step 8 — Reset**  
+Reset zeroes all three counters, clears the scoreboard display, and calls `localStorage.removeItem('scored')` to wipe persisted data.
+
+---
+
+## 📂 Folder structure
+
+```
+rock_paper_scissors/
+├── index.html      # Buttons and layout
+├── style.css       # Dark theme, button colors, hover effects
+└── script.js       # Game logic, scoreboard, auto-play, keyboard
+```
+
+---
+
+## 🚀 Run locally
+
+```bash
+git clone https://github.com/Tanmaykumae09/java_script.git
+cd "java_script/rock_paper_scissors"
+# open index.html in your browser
+```
+
+---
+
+## ⚠️ Known issues / things to improve
+
+- `onkeydown="key(event)"` on individual buttons is redundant — the global `document.body` listener already handles keyboard input; the inline attributes can be removed
+- Auto-play button style (`.auto-btn`) is missing from `style.css` — it renders unstyled
+- Reset button and scoreboard `<div>` are created dynamically in JS — moving them into `index.html` would be cleaner
+- Score key in `localStorage` is named `'scored'` — consider renaming to `'rps-score'` to avoid collisions with other projects
+
+---
+
+> Built by Tanmay · Part of the `java_script/` mini-projects collection
 > Built by Tanmay · For learning purposes only · Not affiliated with Netflix
