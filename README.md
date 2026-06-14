@@ -133,6 +133,7 @@ cd "Clone/netflix clone"
 A browser-based Rock Paper Scissors game with score tracking, auto-play mode, and keyboard shortcuts — built with vanilla JavaScript.
 
 > 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+<img width="960" height="515" alt="Screenshot 2026-06-14 152304" src="https://github.com/user-attachments/assets/06cee57b-b375-4506-87df-dea1fcbfee4c" />
 
 ---
 
@@ -189,6 +190,8 @@ A `keydown` listener on `document.body` maps `R`, `P`, and `S` keys directly to 
 **Step 8 — Reset**  
 Reset zeroes all three counters, clears the scoreboard display, and calls `localStorage.removeItem('scored')` to wipe persisted data.
 
+---
+<img width="1472" height="1800" alt="image" src="https://github.com/user-attachments/assets/2046d9c1-7613-48e8-8c0f-b3691cc9fd7c" />
 ---
 
 ## 📂 Folder structure
