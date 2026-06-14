@@ -8,15 +8,19 @@ let currentEditingIndex = null;
 
 // Add Expense
 document.querySelector('.add-btn').addEventListener("click", () => {
-    expense.push({
-        name: expenseName.value,
-        amount: expenseAmount.value,
-        date: expenseDate.value,
-        category: expenseCategory.value
-    });
+    if((expenseName.value==='')||(expenseAmount.value=='')||(expenseDate.value=='')||(expenseCategory.value=='')){
+        alert('please enter valid expense')
+    }else{
+        expense.push({
+            name: expenseName.value,
+            amount: expenseAmount.value,
+            date: expenseDate.value,
+            category: expenseCategory.value
+        });
+        renderexpense();
+    }
 
     localStorage.setItem('Expense', JSON.stringify(expense));
-    renderexpense();
 
     expenseName.value = '';
     expenseAmount.value = '';
