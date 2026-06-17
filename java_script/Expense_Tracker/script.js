@@ -8,9 +8,9 @@ let currentEditingIndex = null;
 
 // Add Expense
 document.querySelector('.add-btn').addEventListener("click", () => {
-    if((expenseName.value==='')||(expenseAmount.value=='')||(expenseDate.value=='')||(expenseCategory.value=='')){
+    if ((expenseName.value === '') || (expenseAmount.value == '') || (expenseDate.value == '') || (expenseCategory.value == '')) {
         alert('please enter valid expense')
-    }else{
+    } else {
         expense.push({
             name: expenseName.value,
             amount: expenseAmount.value,
@@ -28,7 +28,7 @@ document.querySelector('.add-btn').addEventListener("click", () => {
     expenseCategory.value = '';
 });
 
-function renderexpense() {
+function renderexpense(data) {
     let tableHtml = `
     <table>
         <tr>
@@ -40,7 +40,7 @@ function renderexpense() {
         </tr>
     `;
 
-    expense.forEach((e, index) => {
+    data.forEach((e, index) => {
         tableHtml += `
         <tr>
             <td>${e.name}</td>
@@ -163,4 +163,25 @@ function rendertotal() {
     document.querySelector('.bottom').innerHTML = `Total: $${total}`;
 }
 
-renderexpense();
+let search;
+let searchInput = document.querySelector('.js-search')
+let matchingExpense = []
+document.querySelector(".search-btn").addEventListener("click", () => {
+    search = searchInput.value.trim();
+    let normalizedSearch = search.toLowerCase();
+    if (search === "") {
+        alert('please enter valid search')
+        return;
+    }
+    matchingExpense = []
+    expense.forEach((e) => {
+        let SavedExpense = e.name.toLowerCase();
+        if (SavedExpense.includes(normalizedSearch)) {
+            matchingExpense.push(e)
+        }
+    })
+    renderexpense(matchingExpense)
+    console.log(matchingExpense)
+    searchInput.value = '';
+})
+renderexpense(expense);
