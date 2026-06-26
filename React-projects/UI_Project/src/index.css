@@ -7,3 +7,7 @@
   /* This creates a specific utility class if you want to use 'font-poppins' */
   --font-poppins: "Poppins", sans-serif;
 }
+
+#right::-webkit-scrollbar{
+  display: none;
+}

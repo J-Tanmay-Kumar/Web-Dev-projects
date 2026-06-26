@@ -1,11 +1,12 @@
 import React from 'react'
+import RightCard from './RightCard'
 
-const Page1contentright = () => {
+const Page1contentright = (props) => {
   return (
-    <div className='flex justify-evenly h-full w-2/3 '>
-      <div>1</div>
-      <div>2</div>
-      <div>3</div>
+    <div id='right' className=' flex justify-between gap-7  flex-nowrap p-4 h-full w-2/3 overflow-x-auto'>
+      {props.users.map(function(elem,idx){
+        return <RightCard  key={idx} id={idx} img ={elem.img} tag={elem.tag} intro={elem.intro} />
+      })}
     </div>
   )
 }
