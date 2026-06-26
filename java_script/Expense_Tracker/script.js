@@ -121,7 +121,7 @@ function saveEdit() {
         document.querySelector('#Edit-expense-category').value;
 
     localStorage.setItem('Expense', JSON.stringify(expense));
-    renderexpense();
+    renderexpense(expense);
 
     document.querySelector('.End').innerHTML = '';
 }
