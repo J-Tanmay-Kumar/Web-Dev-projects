@@ -1,0 +1,39 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+
+
+body{
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-box{
+    margin-top: 100px;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 40%;
+    border: 2px solid black;
+}
+
+.search-space{
+    display: flex;
+    gap: 10px;
+}
+
+.details{
+    display: flex;
+    gap: 10px;
+}
+
+.city-name{
+    text-align: center;
+    margin-top: 10%;
+}
