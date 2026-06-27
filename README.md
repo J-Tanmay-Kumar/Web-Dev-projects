@@ -311,5 +311,84 @@ cd "java_script/Random_user_generator"
 - No loading state — on slow connections, clicking the button shows nothing until the data arrives
 - Title has a typo: "Random USer Generater" → should be "Random User Generator"
 ---
+# ✅ To-Do List
+
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+A minimal to-do list app that lets you add and delete tasks dynamically — built with vanilla JavaScript and DOM manipulation. No libraries, no frameworks, no fuss.
+<img width="1920" height="1017" alt="image" src="https://github.com/user-attachments/assets/585bb30a-a64c-4e3d-b54b-52a169940722" />
+
+> 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+
+---
+
+## ✨ Features
+
+- ✅ Add tasks by typing and clicking **Add**
+- ✅ Each task gets its own **Delete** button
+- ✅ Validates empty input with an alert before adding
+- ✅ Input field clears automatically after adding a task
+- ✅ Dark theme UI with smooth hover transitions
+
+---
+
+## 🧠 Algorithm — step by step
+
+**Step 1 — Page load**  
+The page renders a text input, an Add button, and an empty `<ul id="container">` where tasks will be injected.
+
+**Step 2 — User types a task**  
+The user types their task into `.to-do-input`. No event fires yet — the value just sits in the field.
+
+**Step 3 — Click Add button**  
+A `click` event listener on `.btn` fires. It reads `input.value` and stores it in `task`, then immediately sets `input.value = ""` to clear the field.
+
+**Step 4 — Validate input**  
+If `task === ""`, an `alert()` warns the user and nothing is added. If the task has content, execution continues.
+
+**Step 5 — Create DOM elements**  
+`document.createElement('li')` creates a new list item. `document.createElement('button')` creates its Delete button. The task text is set as `li.innerText`, and the Delete button is appended inside the `li`.
+
+**Step 6 — Append to the list**  
+`document.getElementById("container").appendChild(li)` adds the new task to the bottom of the visible list.
+
+**Step 7 — Delete a task**  
+Each Delete button gets its own `click` listener at creation time. When clicked, `li.remove()` removes that specific task from the DOM entirely.
+
+---
+<img width="1094" height="1320" alt="image" src="https://github.com/user-attachments/assets/b6073f80-42c7-4d44-ae1d-08adceb33892" />
+
+## 📂 Folder structure
+
+```
+To-do list/
+├── index.html      # Input, button, and empty task container
+├── style.css       # Dark theme, task cards, delete button styling
+└── script.js       # Add task logic, validation, delete functionality
+```
+
+---
+
+## 🚀 Run locally
+
+```bash
+git clone https://github.com/Tanmaykumae09/java_script.git
+cd "java_script/To-do list"
+# open index.html in your browser
+```
+
+---
+
+## ⚠️ Known issues / things to improve
+
+- Tasks don't persist on page refresh — adding `localStorage` support would save the task list between sessions
+- No way to mark a task as complete — a checkbox or strikethrough on click would be a clean improvement
+- Empty spaces pass validation (e.g. a task of just spaces) — use `task.trim() === ""` instead of `task === ""` to fix this
+- No keyboard support — pressing `Enter` in the input should also trigger the Add button
+
+---
+
 > Built by Tanmay · Part of the `java_script/` mini-projects collection
 > Built by Tanmay · For learning purposes only · Not affiliated with Netflix
