@@ -2,26 +2,39 @@ const CityInput = document.body.querySelector('#city');
 const searchAct = document.body.querySelector("#search");
 const nameSpace = document.body.querySelector(".city-name");
 const temperature = document.body.querySelector(".temp");
-
-// Selecting the remaining DOM elements based on your HTML classes
 const conditionSpace = document.body.querySelector(".condition");
 const humiditySpace = document.body.querySelector(".humidity");
 const windSpace = document.body.querySelector(".windspeed");
 
-// 1. Your WeatherAPI key
 const apiKey = "a1d017a9139345e6aee125116262706"; 
 
-// 2. Fetch logic inside the click event listener
+// 1. Helper function to update the DOM elements
+function updateUI(data) {
+    nameSpace.textContent = data.location.name;
+    temperature.textContent = `Temperature: ${data.current.temp_c}°C`;
+    conditionSpace.textContent = `Condition: ${data.current.condition.text}`;
+    humiditySpace.textContent = `Humidity: ${data.current.humidity}%`;
+    windSpace.textContent = `Wind: ${data.current.wind_kph} km/h`;
+}
+
+// 2. Load cached data from localStorage on page load
+window.addEventListener("DOMContentLoaded", () => {
+    const savedWeatherData = localStorage.getItem("lastWeatherData");
+    if (savedWeatherData) {
+        const cachedData = JSON.parse(savedWeatherData);
+        updateUI(cachedData);
+    }
+});
+
+// 3. Fetch logic inside click event
 searchAct.addEventListener("click", async () => {
     let cityValue = CityInput.value.trim();
     
-    // Guard clause
     if (!cityValue) {
         alert("Please enter a city name");
         return;
     }
 
-    // 3. Dynamic URL construction
     const URL = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${cityValue}`;
 
     try {
@@ -32,14 +45,12 @@ searchAct.addEventListener("click", async () => {
         }
 
         let data = await response.json();
-        console.log(data); // Inspect this in your browser console to see the structure!
         
-        // 4. Update the UI using the correct API data paths
-        nameSpace.textContent = data.location.name;
-        temperature.textContent = `Temperature: ${data.current.temp_c}°C`;
-        conditionSpace.textContent = `Condition: ${data.current.condition.text}`;
-        humiditySpace.textContent = `Humidity: ${data.current.humidity}%`;
-        windSpace.textContent = `Wind: ${data.current.wind_kph} km/h`;
+        // 4. Update the UI with fresh data
+        updateUI(data);
+
+        // 5. Save the JSON data into localStorage as a string
+        localStorage.setItem("lastWeatherData", JSON.stringify(data));
 
     } catch (error) {
         console.error("Error fetching weather:", error.message);
