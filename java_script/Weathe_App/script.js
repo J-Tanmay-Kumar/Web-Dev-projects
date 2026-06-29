@@ -17,17 +17,8 @@ function updateUI(data) {
     windSpace.textContent = `Wind: ${data.current.wind_kph} km/h`;
 }
 
-// 2. Load cached data from localStorage on page load
-window.addEventListener("DOMContentLoaded", () => {
-    const savedWeatherData = localStorage.getItem("lastWeatherData");
-    if (savedWeatherData) {
-        const cachedData = JSON.parse(savedWeatherData);
-        updateUI(cachedData);
-    }
-});
-
-// 3. Fetch logic inside click event
-searchAct.addEventListener("click", async () => {
+// 2. Main search function logic
+async function handleSearch() {
     let cityValue = CityInput.value.trim();
     
     if (!cityValue) {
@@ -46,14 +37,30 @@ searchAct.addEventListener("click", async () => {
 
         let data = await response.json();
         
-        // 4. Update the UI with fresh data
         updateUI(data);
-
-        // 5. Save the JSON data into localStorage as a string
         localStorage.setItem("lastWeatherData", JSON.stringify(data));
 
     } catch (error) {
         console.error("Error fetching weather:", error.message);
         alert("Could not fetch weather data. Please check the city name.");
+    }
+}
+
+// 3. Trigger search on click
+searchAct.addEventListener("click", handleSearch);
+
+// 4. NEW FEATURE: Trigger search when pressing "Enter" inside the input field
+CityInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        handleSearch();
+    }
+});
+
+// 5. Load cached data from localStorage on page load
+window.addEventListener("DOMContentLoaded", () => {
+    const savedWeatherData = localStorage.getItem("lastWeatherData");
+    if (savedWeatherData) {
+        const cachedData = JSON.parse(savedWeatherData);
+        updateUI(cachedData);
     }
 });
