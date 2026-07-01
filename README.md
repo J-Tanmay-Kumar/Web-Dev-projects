@@ -390,5 +390,106 @@ cd "java_script/To-do list"
 
 ---
 
+# 💱 Currency Converter
+
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![API](https://img.shields.io/badge/API-currency--api-blueviolet?style=flat)
+
+A live currency converter that fetches real exchange rates and displays country flags dynamically — built with vanilla JavaScript, `async/await`, and two public APIs.
+
+<img width="1920" height="1024" alt="image" src="https://github.com/user-attachments/assets/24e07468-4a9d-49e8-8223-dbb842828a50" />
+
+
+> 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+
+---
+
+## ✨ Features
+
+- ✅ Converts between 150+ currencies
+- ✅ Fetches live exchange rates from a public currency API
+- ✅ Country flags update automatically when you change the currency
+- ✅ Defaults to USD → INR on page load
+- ✅ Validates empty or invalid amount — falls back to 1
+- ✅ Clean card UI with a responsive layout
+
+---
+
+## 🧠 Algorithm — step by step
+
+**Step 1 — Page load: populate dropdowns**  
+The `countryList` object (in `codes.js`) maps every currency code to its country code (e.g. `INR → IN`). A `for...in` loop runs over it and creates an `<option>` element for every currency, appending it to both the FROM and TO `<select>` dropdowns.
+
+**Step 2 — Set defaults**  
+While building the options, `USD` is automatically marked `selected` in the FROM dropdown and `INR` in the TO dropdown, so the page is ready to convert on first load.
+
+**Step 3 — Flag update on dropdown change**  
+Each `<select>` has a `change` event listener. When the user picks a different currency, `updateflag()` reads the new currency code, looks up its country code in `countryList`, and builds a new image URL using `flagsapi.com`. It then finds the `<img>` inside the same parent container and swaps its `src`.
+
+**Step 4 — Click "Get Exchange Rate"**  
+The button's `click` listener calls `evt.preventDefault()` to stop the `<form>` from refreshing the page, then reads the input amount.
+
+**Step 5 — Validate amount**  
+If the amount is empty or less than 1, it is reset to `1` and the input field is updated to show `"1"` so the user sees the correction.
+
+**Step 6 — Build URL and fetch**  
+The API URL is built as `BASE_URL/{fromCurrency}.json` (e.g. `.../usd.json`). `await fetch(URL)` sends the GET request to the currency API.
+
+**Step 7 — Parse JSON and extract rate**  
+`await response.json()` parses the response. The exchange rate is accessed as `data[fromCurrency][toCurrency]` — a nested lookup that returns the exact conversion multiplier.
+
+**Step 8 — Calculate result**  
+`finalAmount = amtVal × rate` multiplies the user's input by the fetched rate.
+
+**Step 9 — Display result**  
+The `.msg` div's `innerText` is updated with the formatted result string, e.g. `100 USD = 8350 INR`.
+
+---
+
+<img width="806" height="1068" alt="image" src="https://github.com/user-attachments/assets/d9e3590e-dbda-4e53-a150-6ccddb8486ab" />
+
+
+## 📂 Folder structure
+
+```
+currency_converter/
+├── index.html      # Form, dropdowns, flag images, result div
+├── style.css       # Card layout, dropdown styling, button
+├── script.js       # Fetch logic, flag update, validation, render
+└── codes.js        # countryList object — 150+ currency → country mappings
+```
+
+---
+
+## 🌐 APIs used
+
+| API | Purpose |
+|---|---|
+| `currency-api.pages.dev` | Live exchange rates |
+| `flagsapi.com` | Country flag images by country code |
+
+---
+
+## 🚀 Run locally
+
+```bash
+git clone https://github.com/Tanmaykumae09/java_script.git
+cd "java_script/currency_converter"
+# open index.html in your browser
+```
+
+---
+
+## ⚠️ Known issues / things to improve
+
+- No `try/catch` around the fetch — if the API is down or the network fails, the page will throw an uncaught error with no user feedback
+- Extra `"` in the TO flag `<img src="...IN/flat/64.png"" alt="">` — a small HTML typo worth fixing
+- `for (currCode in countryList)` is missing `let` — `currCode` leaks into the global scope; use `for (let currCode in countryList)` instead
+- The `.message` div (`1USD = 80INR`) is hardcoded in the HTML and never updated by the script — `.msg` is used instead; the `.message` div is dead markup
+
+---
+
+
 > Built by Tanmay · Part of the `java_script/` mini-projects collection
-> Built by Tanmay · For learning purposes only · Not affiliated with Netflix
