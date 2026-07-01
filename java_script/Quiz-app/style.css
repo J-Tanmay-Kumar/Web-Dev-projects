@@ -36,3 +36,32 @@
         border-radius: 10px;
     }
 
+    .Start-btn:hover{
+        cursor: pointer;
+    }
+
+    .newContainer {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+    .options {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .Section-1 {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .Section-2 {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
