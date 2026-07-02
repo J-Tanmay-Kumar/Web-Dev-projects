@@ -19,6 +19,17 @@ newContainer.innerHTML = `
 <label><input type="radio" name="quiz" /> Kolkata</label>
 <label><input type="radio" name="quiz" /> Chennai</label>
 </div>
+<div class="submited js-submited">
+    <img src="checkmark.png">
+        Submited
+</div>
+<div class="Action">
+    <div>
+        <button class="Submit-btn">Submit</button>
+    </div>
+    <div>
+        <button class="Next-btn">Next</button>
+    </div>
 </div>
 `;
 
@@ -26,6 +37,12 @@ newContainer.innerHTML = `
 let start = document.body.querySelector('.Start-btn')
 start.addEventListener("click", () => {
     oldContainer.replaceWith(newContainer);
+
+    let submit = document.querySelector('.Submit-btn')
+    submit.addEventListener("click", () => {
+        document.querySelector('.js-submited').classList.add('js-submited-css')
+    })
+
 })
 
 

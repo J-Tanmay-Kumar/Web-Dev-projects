@@ -80,3 +80,29 @@
         justify-content: space-around;
         width: 100%;
     }
+
+
+    .Action{
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+.submited{
+  color: rgb(6, 125, 98);
+  font-size: 16px;
+
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+
+  /* At first, the "Added to cart" message will
+     be invisible. Use JavaScript to change the
+     opacity and make it visible. */
+  opacity: 0;
+}
+
+
+.js-submited-css{
+    opacity: 1;
+}
