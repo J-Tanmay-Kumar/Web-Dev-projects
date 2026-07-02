@@ -1,3 +1,4 @@
+import { questions } from "./Questions.js";
 // 1. Select the old container from the DOM
 const oldContainer = document.body.querySelector('.Container');
 
@@ -34,6 +35,7 @@ newContainer.innerHTML = `
 `;
 
 // 4. Swap the old container out for the new container instantly
+let currentQuestionIndex = 0;
 let start = document.body.querySelector('.Start-btn')
 start.addEventListener("click", () => {
     oldContainer.replaceWith(newContainer);
@@ -43,6 +45,20 @@ start.addEventListener("click", () => {
         document.querySelector('.js-submited').classList.add('js-submited-css')
     })
 
+
+    let next = document.querySelector('.Next-btn')
+    next.addEventListener('click',()=>{
+        currentQuestionIndex++;
+        renderQuestion()
+    })
+
 })
 
 
+questions.forEach((question,currentQuestionIndex)=>{
+    currentQuestionIndex;
+})
+
+const renderQuestion=()=>{
+    console.log(questions[currentQuestionIndex])
+}
