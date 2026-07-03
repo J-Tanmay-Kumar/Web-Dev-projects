@@ -5,6 +5,7 @@ const App = () => {
   let [title, setTitle] = useState('')
   let [note, setNote] = useState('')
   let [task, setTask] = useState([])
+  
   const submitHandler = (e) => {
     e.preventDefault()
     let details = [...task]
@@ -16,6 +17,12 @@ const App = () => {
     setNote('')
   }
 
+
+  const DeleteBtn = (idx)=>{
+    let details = [...task]
+    details.splice(idx,1)
+    setTask(details)
+  }
   return (
 
     <div className='flex justify-center items-center h-screen bg-slate-100 flex-col flex-wrap gap-10'>
@@ -71,7 +78,7 @@ const App = () => {
               <div className="mt-4 pt-3 border-t border-slate-100 flex justify-end text-xs text-slate-400">
                 <span>Just now</span>
               </div>
-              <button className="w-full bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 text-xs font-semibold py-2 px-3 rounded-lg transition-colors duration-200">
+              <button className="w-full bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 text-xs font-semibold py-2 px-3 rounded-lg transition-colors duration-200" onClick={DeleteBtn}>
                 Delete Note
               </button>
             </div>
