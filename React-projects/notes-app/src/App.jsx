@@ -14,15 +14,15 @@ const App = () => {
   }
 
   return (
-    <div className='flex justify-center items-center h-lvh'>
+  <div className='flex justify-center items-center h-screen bg-slate-100'>
   {/* Wrapped both the form and button in a flex container with items-end */}
-  <div className="flex items-end gap-3 bg-blue-400 h-vh w-vh p-10 rounded-full">
-    <form className='flex flex-col text-white'>
+  <div className="flex items-end gap-4 bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+    <form className='flex flex-col text-slate-800'>
       {/* Top Input: Only rounds top corners, removes bottom border to prevent the thick line */}
       <input 
         type="text" 
         placeholder='Enter Title' 
-        className="border-2 border-b-0 border-gray-400 p-2 rounded-t-lg w-2xs outline-none" 
+        className="border border-b-0 border-slate-300 p-3 rounded-t-xl w-64 outline-none font-semibold placeholder-slate-400 focus:border-blue-500 focus:bg-slate-50 transition-colors" 
         value={title} 
         onChange={(e) => setTitle(e.target.value)} 
       />
@@ -30,7 +30,7 @@ const App = () => {
       <input 
         type="text" 
         placeholder='Enter Notes' 
-        className="border-2 border-gray-400 p-2 rounded-b-lg w-2xs outline-none" 
+        className="border border-slate-300 p-3 rounded-b-xl w-64 outline-none text-sm placeholder-slate-400 focus:border-blue-500 focus:bg-slate-50 transition-colors" 
         value={note} 
         onChange={(e) => setNote(e.target.value)} 
       />
@@ -39,7 +39,7 @@ const App = () => {
     {/* Button: Aligns perfectly with the bottom input line */}
     <button 
       onClick={add} 
-      className="bg-red-800 h-10 px-5 rounded-lg text-white font-medium hover:bg-red-900 transition-colors"
+      className="bg-blue-600 h-11 px-5 rounded-xl text-white font-medium hover:bg-blue-700 active:scale-95 transition-all shadow-md shadow-blue-500/20"
     >
       Add
     </button>
