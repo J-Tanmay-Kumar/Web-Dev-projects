@@ -137,3 +137,5 @@ const initEventListeners = () => {
 
 // Run initialization
 initEventListeners();
+
+//Completed Quiz-app
