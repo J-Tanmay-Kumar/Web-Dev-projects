@@ -1,108 +1,198 @@
-    * {
-        margin: 0;
-        padding: 0;
-    }
-
-
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
-
-
-
-    .Container {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(10px);
-        border-radius: 24px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-        width: 100%;
-        max-width: 400px;
-        text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 30px 30px;
-    }
-
-    .newContainer {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(10px);
-        border-radius: 24px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-        width: 100%;
-        max-width: 400px;
-        text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 30px 30px;
-    }
-
-    .Start-btn {
-        background-color: #FF6347;
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 10px;
-    }
-
-    .Start-btn:hover{
-        cursor: pointer;
-    }
-
-    .newContainer {
-        display: flex;
-        flex-direction: column;
-        row-gap: 10px;
-    }
-
-    .options {
-        display: flex;
-        flex-direction: column;
-        row-gap: 10px;
-        margin-bottom: 10px;
-        width: 100%;
-    }
-
-    .Section-1 {
-        display: flex;
-        justify-content: space-around;
-        width: 100%;
-    }
-
-    .Section-2 {
-        display: flex;
-        justify-content: space-around;
-        width: 100%;
-    }
-
-
-    .Action{
-        display: flex;
-        justify-content: space-between;
-    }
-
-
-.submited{
-  color: rgb(6, 125, 98);
-  font-size: 16px;
-
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-
-  /* At first, the "Added to cart" message will
-     be invisible. Use JavaScript to change the
-     opacity and make it visible. */
-  opacity: 0;
+/* ==========================================
+   1. GLOBAL STYLES & RESET
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
 
-.js-submited-css{
+/* ==========================================
+   2. CONTAINERS (CARD LAYOUT)
+   ========================================== */
+.Container, .newContainer {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* Typography */
+h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+h3 {
+    color: #4a5568;
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+h4 {
+    color: #4a5568;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* ==========================================
+   3. QUESTION & OPTIONS GRID
+   ========================================== */
+.question {
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.options {
+    margin-bottom: 20px;
+}
+
+.options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Custom Radio Label Cards */
+.options-grid label {
+    display: flex;
+    align-items: center;
+    background-color: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 1rem;
+    color: #4a5568;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.options-grid label:hover {
+    background-color: #edf2f7;
+    border-color: #cbd5e0;
+}
+
+/* Radio Input Styling */
+.options-grid input[type="radio"] {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    accent-color: #667eea;
+    cursor: pointer;
+}
+
+/* Highlight container if option is selected */
+.options-grid label:has(input[type="radio"]:checked) {
+    background-color: #ebf8ff;
+    border-color: #4299e1;
+    color: #2b6cb0;
+    font-weight: 600;
+}
+
+/* ==========================================
+   4. BUTTONS
+   ========================================== */
+button {
+    background-color: #667eea;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: #5a67d8;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Specific Screen Buttons */
+.Start-btn, .Restart-btn {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 1.1rem;
+    padding: 14px;
+}
+
+.Action {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.Submit-btn {
+    background-color: #38a169;
+    flex: 1;
+}
+
+.Submit-btn:hover {
+    background-color: #2f855a;
+}
+
+.Next-btn {
+    background-color: #4a5568;
+    flex: 1;
+}
+
+.Next-btn:hover {
+    background-color: #2d3748;
+}
+
+/* ==========================================
+   5. SUBMISSION STATE
+   ========================================== */
+.submited {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #c6f6d5;
+    color: #22543d;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    
+    /* Hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+.submited img {
+    width: 18px;
+    height: 18px;
+}
+
+/* Active Class added by JS */
+.js-submited-css {
     opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
