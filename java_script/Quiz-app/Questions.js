@@ -21,8 +21,8 @@ export const questions = [
   },
   {
     question: "Which HTML tag is used for JavaScript?",
-    options: ["<js>", "<script>", "<javascript>", "<code>"],
-    answer: "<script>"
+    options: ["js", "script", "javascript", "code"],
+    answer: "script"
   },
   {
     question: "What does CSS stand for?",

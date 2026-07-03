@@ -6,59 +6,78 @@ const oldContainer = document.body.querySelector('.Container');
 const newContainer = document.createElement('div');
 newContainer.className = 'newContainer';
 
-// 3. Inject the modern quiz structure using a template string
-newContainer.innerHTML = `
-<div class="question">
-<h4>what is the capital of india</h4>
-</div>
-<div class="options">
-<div class="Section-1">
-<label><input type="radio" name="quiz" /> New Delhi</label>
-<label><input type="radio" name="quiz" /> Mumbai</label>
-</div>
-<div class="Section-2">
-<label><input type="radio" name="quiz" /> Kolkata</label>
-<label><input type="radio" name="quiz" /> Chennai</label>
-</div>
-<div class="submited js-submited">
-    <img src="checkmark.png">
-        Submited
-</div>
-<div class="Action">
-    <div>
-        <button class="Submit-btn">Submit</button>
-    </div>
-    <div>
-        <button class="Next-btn">Next</button>
-    </div>
-</div>
-`;
-
 // 4. Swap the old container out for the new container instantly
 let currentQuestionIndex = 0;
-let start = document.body.querySelector('.Start-btn')
+
+
+const renderQuestion = () => {
+    const currentData = questions[currentQuestionIndex];
+    console.log(currentData?.answer);
+    console.log("index:", currentQuestionIndex);
+    // Safety check: if we run out of questions
+    if (!currentData) {
+        console.log("quiz completed");
+        newContainer.innerHTML = `<h2>Quiz Completed!</h2>`;
+        return;
+    }
+
+    // 1. Loop through whatever options exist for THIS specific question dynamically
+    const optionsHTML = currentData.options.map(option => `
+        <label><input type="radio" name="quiz" value="${option}" />${option}</label>
+    `).join('');
+
+    // 2. Inject the HTML cleanly without hardcoding indices
+    newContainer.innerHTML = `
+        <div class="question">
+            <h4>${currentData.question}</h4>
+        </div>
+        <div class="options">
+            <div class="options-grid">
+                ${optionsHTML}
+            </div>
+        </div>
+        <div class="submited js-submited">
+            <img src="checkmark.png">
+            Submited
+        </div>
+        <div class="Action">
+            <div>
+                <button class="Submit-btn">Submit</button>
+            </div>
+            <div>
+                <button class="Next-btn">Next</button>
+            </div>
+        </div>
+    `;
+
+    // 3. Bind events now that the layout is guaranteed to render fully
+    setupEventListeners();
+};
+const setupEventListeners = () => {
+    const submit = newContainer.querySelector('.Submit-btn');
+    const next = newContainer.querySelector('.Next-btn');
+
+    // Safety check: Make sure both buttons actually exist in the HTML
+    if (!submit || !next) {
+        console.error("Could not find .Submit-btn or .Next-btn inside newContainer. Check your HTML template string structure.");
+        return; 
+    }
+    console.log("setting listeners");
+    submit.addEventListener("click", () => {
+        const submittedDiv = newContainer.querySelector('.js-submited');
+        if (submittedDiv) {
+            submittedDiv.classList.add('js-submited-css');
+        }
+    });
+
+    next.addEventListener('click', () => {
+        currentQuestionIndex++;
+        renderQuestion();
+    });
+};
+
+const start = document.body.querySelector('.Start-btn')
 start.addEventListener("click", () => {
     oldContainer.replaceWith(newContainer);
-
-    let submit = document.querySelector('.Submit-btn')
-    submit.addEventListener("click", () => {
-        document.querySelector('.js-submited').classList.add('js-submited-css')
-    })
-
-
-    let next = document.querySelector('.Next-btn')
-    next.addEventListener('click',()=>{
-        currentQuestionIndex++;
-        renderQuestion()
-    })
-
+    renderQuestion()
 })
-
-
-questions.forEach((question,currentQuestionIndex)=>{
-    currentQuestionIndex;
-})
-
-const renderQuestion=()=>{
-    console.log(questions[currentQuestionIndex])
-}
