@@ -490,6 +490,90 @@ cd "java_script/currency_converter"
 - The `.message` div (`1USD = 80INR`) is hardcoded in the HTML and never updated by the script — `.msg` is used instead; the `.message` div is dead markup
 
 ---
+# 💸 Expense Tracker
+
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![localStorage](https://img.shields.io/badge/localStorage-Persistent-orange?style=flat)
+
+A fully functional expense tracker with add, edit, delete, search, and total calculation — built with vanilla JavaScript and localStorage. Data persists across page refreshes.
+<img width="960" height="576" alt="image" src="https://github.com/user-attachments/assets/51831b2c-3f1c-467a-a78c-ecfb10781e35" />
 
 
+> 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+
+---
+
+## ✨ Features
+
+- ✅ Add expenses with name, amount, date, and category
+- ✅ Edit any existing expense via an inline form
+- ✅ Delete individual expenses
+- ✅ Search expenses by name (case-insensitive)
+- ✅ Running total displayed and recalculated after every action
+- ✅ All data saved to `localStorage` — survives page refresh
+- ✅ Form validation — alerts user on empty fields
+
+---
+
+## 🧠 Algorithm — step by step
+
+**Step 1 — Page load**  
+`localStorage.getItem('Expense')` is parsed with `JSON.parse`. If nothing is saved yet, `expense` defaults to an empty array `[]`. `renderexpense(expense)` is called immediately to display any previously saved data.
+
+**Step 2 — Add an expense**  
+Clicking **Add Expense** checks that all four fields (name, amount, date, category) are non-empty. If any are blank, an `alert()` fires. Otherwise the new expense object is pushed into the `expense` array, `localStorage` is updated, and the form fields are cleared.
+
+**Step 3 — renderexpense(data)**  
+This is the central render function. It receives an array of expenses, builds a full HTML `<table>` string using `.forEach()`, and injects it into `.body` via `innerHTML`. After rendering, it immediately calls `delAction()`, `editAction()`, and `rendertotal()` to wire up all buttons on the freshly built table.
+
+**Step 4 — Delete an expense**  
+`delAction()` finds all `.js-del-btn` buttons. Each button stores its row index in `data-index`. On click, `expense.splice(index, 1)` removes that item, `localStorage` is updated, and `renderexpense()` is called again to rebuild the table.
+
+**Step 5 — Edit an expense**  
+`editAction()` finds all `.js-edit-btn` buttons. On click, `currentEditingIndex` is set to the row index and `renderform(index)` injects an edit form into the `.End` div, pre-filled with the existing values of that expense.
+
+**Step 6 — Save an edit**  
+`saveEdit()` reads the four edit input fields, overwrites `expense[currentEditingIndex]` with the new values, saves to `localStorage`, re-renders the main table, and clears the `.End` edit form.
+
+**Step 7 — rendertotal()**  
+Loops through all items in `expense` with `.forEach()`, accumulates the total using `Number(e.amount)`, and displays the result in the `.bottom` div as `Total: $X`.
+
+**Step 8 — Search**  
+The search button reads the input, trims it, and filters `expense` using `.includes()` after lowercasing both the search term and each expense name. The matched subset is passed to `renderexpense()` so only matching rows appear. The original `expense` array is unchanged.
+<img width="1094" height="1578" alt="image" src="https://github.com/user-attachments/assets/00c000ad-d20f-40b4-a4e3-c3857da208a0" />
+
+---
+
+## 📂 Folder structure
+
+```
+Expense_Tracker/
+├── index.html      # Form, search bar, table container, edit form slot
+├── style.css       # Card layout, table styles, edit form, buttons
+└── script.js       # Add, edit, delete, search, render, total logic
+```
+
+---
+
+## 🚀 Run locally
+
+```bash
+git clone https://github.com/Tanmaykumae09/java_script.git
+cd "java_script/Expense_Tracker"
+# open index.html in your browser
+```
+
+---
+
+## ⚠️ Known issues / things to improve
+
+- `renderexpense()` is called without an argument in `delAction()` and the Add button's event listener — this means `data` inside the function is `undefined` and `.forEach` will crash; always pass `expense` explicitly: `renderexpense(expense)`
+- `currentEditingIndex` stores the index as a string (from `dataset.index`) — when used to access `expense[currentEditingIndex]`, JavaScript coerces it, but it's safer to use `Number(index)` explicitly
+- No confirmation before deleting — a simple `confirm("Delete this expense?")` would prevent accidental deletions
+- Search results show filtered data but the total still recalculates from the full `expense` array, not the filtered view — the total should match what's visible on screen
+- Category options in the add form and the edit form are different — the add form has a blank default option, the edit form doesn't; keep them consistent
+
+---
 > Built by Tanmay · Part of the `java_script/` mini-projects collection
