@@ -15,7 +15,7 @@ export const products = [
     id: 3,
     name: "Bluetooth Speaker",
     price: 1899,
-    image: "images/speaker.jpg"
+    image: "images/bluetoothspeaker.png"
   },
   {
     id: 4,
