@@ -5,14 +5,8 @@ let productHtml = '';
     productHtml  = productHtml+`
     <article class="product-card" data-product-id="sample-001">
           <div class="product-card__image-wrap">
-            <span class="product-card__badge">New</span>
-            <div class="product-card__image-placeholder">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <path d="M21 15l-5-5L5 21"/>
-              </svg>
-              <span>Image</span>
+            <img class="product-image"
+              src="${product.image}">
             </div>
           </div>
 
@@ -27,7 +21,7 @@ let productHtml = '';
 
             <div class="product-card__footer">
               <span class="product-card__price">
-                ${product.price}
+                $${product.price/100}
                 <span class="product-card__price-original">$99.99</span>
               </span>
               <button type="button" class="btn btn-add-cart" data-add-to-cart>
