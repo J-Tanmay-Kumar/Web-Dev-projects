@@ -576,4 +576,102 @@ cd "java_script/Expense_Tracker"
 - Category options in the add form and the edit form are different — the add form has a blank default option, the edit form doesn't; keep them consistent
 
 ---
+# 🌤️ Weather App
+
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![API](https://img.shields.io/badge/API-WeatherAPI.com-3498db?style=flat)
+![localStorage](https://img.shields.io/badge/localStorage-Cached-orange?style=flat)
+
+A clean weather app that fetches live weather data for any city — built with vanilla JavaScript, `async/await`, and the WeatherAPI. Last searched city loads automatically on refresh.
+
+<img width="960" height="512" alt="image" src="https://github.com/user-attachments/assets/cbfefbe8-3a34-48b3-82c7-1ecc0b43c06e" />
+
+> 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+
+---
+
+## ✨ Features
+
+- ✅ Search any city and get live weather data
+- ✅ Displays temperature, condition, humidity, and wind speed
+- ✅ Supports both **click** and **Enter key** to trigger search
+- ✅ Proper error handling — shows user-friendly alerts for bad city names or API failures
+- ✅ Caches last result in `localStorage` — loads on page refresh automatically
+- ✅ Glassmorphism UI with fade-in animation on weather update
+
+---
+
+## 🧠 Algorithm — step by step
+
+**Step 1 — Page load: check cache**  
+`DOMContentLoaded` fires and checks `localStorage.getItem("lastWeatherData")`. If data exists, it's parsed and passed to `updateUI()` immediately — so the last searched city shows up without any API call.
+
+**Step 2 — User types a city**  
+The user types into the `#city` input field. Nothing happens until the search is triggered.
+
+**Step 3 — Trigger handleSearch()**  
+Two ways to trigger: clicking the **Get Weather** button (via `click` event listener) or pressing **Enter** inside the input (via `keydown` listener checking `event.key === "Enter"`). Both call the same `handleSearch()` function.
+
+**Step 4 — Validate input**  
+`CityInput.value.trim()` removes whitespace. If the result is empty, an `alert()` fires and the function returns early — no API call is made.
+
+**Step 5 — Build URL and fetch**  
+The API URL is built using the API key and the city value: `https://api.weatherapi.com/v1/current.json?key=...&q={city}`. `await fetch(URL)` sends the GET request inside a `try/catch` block.
+
+**Step 6 — Check response.ok**  
+Unlike basic `fetch`, this app checks `response.ok` after the fetch — if the status is not 200 (e.g. 400 for unknown city), it manually throws an error. This is caught by the `catch` block.
+
+**Step 7 — Parse JSON**  
+`await response.json()` parses the response. The relevant fields are nested under `data.location.name`, `data.current.temp_c`, `data.current.condition.text`, `data.current.humidity`, and `data.current.wind_kph`.
+
+**Step 8 — updateUI(data)**  
+`updateUI()` is a dedicated helper that takes the full API response and updates all five DOM elements — city name, temperature, condition, humidity, and wind speed — using `textContent`.
+
+**Step 9 — Cache to localStorage**  
+`localStorage.setItem("lastWeatherData", JSON.stringify(data))` saves the full response so the next page load can skip the API call and show the last result instantly.
+
+---
+<img width="1094" height="1546" alt="image" src="https://github.com/user-attachments/assets/928fc645-19c2-44f1-b6be-bf3fa7223e6a" />
+
+## 📂 Folder structure
+
+```
+Weather_App/
+├── index.html      # Search bar, city card, weather details layout
+├── style.css       # Glassmorphism card, search bar, fade-in animation
+└── script.js       # handleSearch, updateUI, cache, keyboard support
+```
+
+---
+
+## 🌐 API used
+
+| API | Purpose |
+|---|---|
+| [WeatherAPI.com](https://www.weatherapi.com) | Live weather data by city name |
+
+---
+
+## 🚀 Run locally
+
+```bash
+git clone https://github.com/Tanmaykumae09/java_script.git
+cd "java_script/Weather_App"
+# open index.html in your browser
+```
+
+> ⚠️ You'll need your own free API key from [weatherapi.com](https://www.weatherapi.com). Replace the `apiKey` value in `script.js`.
+
+---
+
+## ⚠️ Known issues / things to improve
+
+- API key is hardcoded in `script.js` — anyone who views your source can use it; for a public repo consider adding a note to use their own key or move it to a `.env` (once you move to Node.js)
+- The `</html>` closing tag is missing from `index.html` — minor but worth fixing
+- No loading state — on slow connections the card shows stale data until the fetch completes; a "Loading..." indicator would improve the experience
+- Cached data never expires — if the API returns fresh data tomorrow, old cached data still loads first; adding a timestamp check would fix this
+
+---
 > Built by Tanmay · Part of the `java_script/` mini-projects collection
