@@ -35,7 +35,16 @@ let productHtml = '';
         </article>
 
     `
-    console.log(product.price)
  })
 
  document.querySelector('.js-products-grid').innerHTML=productHtml;
+
+
+ document.querySelectorAll('.btn-add-cart')
+ .forEach((button)=>{
+   let cartQuantity = 1;
+   button.addEventListener("click",()=>{
+      document.querySelector('.js-cart-quantity').innerHTML= cartQuantity++;
+      console.log("Added to cart")
+    })
+  })
