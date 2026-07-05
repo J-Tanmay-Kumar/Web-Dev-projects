@@ -1,9 +1,9 @@
 import { products } from "./data/product.js";
 
 let productHtml = '';
- products.map((product)=>{
-    productHtml  = productHtml+`
-    <article class="product-card" data-product-id="sample-001">
+products.map((product) => {
+  productHtml = productHtml + `
+    <article class="product-card" data-product-id="${product.id}">
           <div class="product-card__image-wrap">
             <img class="product-image"
               src="${product.image}">
@@ -21,10 +21,10 @@ let productHtml = '';
 
             <div class="product-card__footer">
               <span class="product-card__price">
-                $${product.price/100}
+                $${product.price / 100}
                 <span class="product-card__price-original">$99.99</span>
               </span>
-              <button type="button" class="btn btn-add-cart" data-add-to-cart>
+              <button type="button" class="btn btn-add-cart" data-product-id='${product.id}'>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                   <path d="M12 5v14M5 12h14"/>
                 </svg>
@@ -35,16 +35,26 @@ let productHtml = '';
         </article>
 
     `
- })
+})
 
- document.querySelector('.js-products-grid').innerHTML=productHtml;
+document.querySelector('.js-products-grid').innerHTML = productHtml;
 
 
- document.querySelectorAll('.btn-add-cart')
- .forEach((button)=>{
-   let cartQuantity = 1;
-   button.addEventListener("click",()=>{
-      document.querySelector('.js-cart-quantity').innerHTML= cartQuantity++;
+document.querySelectorAll('.btn-add-cart')
+  .forEach((button) => {
+    let cartQuantity = 0;
+    const { productId } = button.dataset
+    const productid = Number(productId)
+    button.addEventListener("click", () => {
+      document.querySelector('.js-cart-quantity').innerHTML = cartQuantity++;
       console.log("Added to cart")
+      console.log(productid)
+      for (const product of products) {
+        let matchingProdt = product.id;
+        if (matchingProdt === productid) {
+          console.log(product)
+          break;
+        }
+      }
     })
   })
