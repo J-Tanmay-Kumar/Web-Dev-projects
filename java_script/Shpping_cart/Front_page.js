@@ -39,22 +39,33 @@ products.map((product) => {
 
 document.querySelector('.js-products-grid').innerHTML = productHtml;
 
-
+const cart = []
+let cartQuantity = 0;
 document.querySelectorAll('.btn-add-cart')
   .forEach((button) => {
-    let cartQuantity = 0;
     const { productId } = button.dataset
     const productid = Number(productId)
     button.addEventListener("click", () => {
-      document.querySelector('.js-cart-quantity').innerHTML = cartQuantity++;
-      console.log("Added to cart")
-      console.log(productid)
+      document.querySelector('.js-cart-quantity').innerHTML = ++cartQuantity;
+      let matchingItem;
+      let matchingProdt;
       for (const product of products) {
-        let matchingProdt = product.id;
-        if (matchingProdt === productid) {
-          console.log(product)
-          break;
+        if (product.id === productid) {
+          matchingProdt = product;
+          cart.forEach((cartItem)=>{
+            if(productid === cartItem.id){
+              matchingItem = cartItem
+            }
+          })
         }
       }
+      if(matchingItem){
+        matchingItem.quantity++;
+      }else{
+        cart.push({ ...matchingProdt, quantity: 1 })
+      }
+
+      console.log(cart)
     })
   })
+
