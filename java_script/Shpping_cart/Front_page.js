@@ -52,20 +52,62 @@ document.querySelectorAll('.btn-add-cart')
       for (const product of products) {
         if (product.id === productid) {
           matchingProdt = product;
-          cart.forEach((cartItem)=>{
-            if(productid === cartItem.id){
+          cart.forEach((cartItem) => {
+            if (productid === cartItem.id) {
               matchingItem = cartItem
             }
           })
         }
       }
-      if(matchingItem){
+      if (matchingItem) {
         matchingItem.quantity++;
-      }else{
+      } else {
         cart.push({ ...matchingProdt, quantity: 1 })
       }
-
+      renderCart()
       console.log(cart)
     })
   })
 
+  
+  const renderCart=()=>{
+  let cartHtml ='';
+  cart.map((cartItem) => {
+    cartHtml = cartHtml + `
+      <div class="cart-line-item" data-cart-item-id="1">
+            <img
+              src="${cartItem.image}"
+              alt="Wireless Headphones"
+              class="cart-line-item__image">
+  
+            <div class="cart-line-item__details">
+              <p class="cart-line-item__name">${cartItem.name}</p>
+              <p class="cart-line-item__price" data-cart-item-price>${'₹'+cartItem.price}</p>
+  
+              <div class="cart-line-item__qty-controls">
+                <button
+                  type="button"
+                  class="cart-line-item__qty-btn"
+                  data-qty-decrease>−</button>
+  
+                <span class="cart-line-item__qty-value" data-cart-item-qty>${cartItem.quantity}</span>
+  
+                <button
+                  type="button"
+                  class="cart-line-item__qty-btn"
+                  data-qty-increase>+</button>
+              </div>
+            </div>
+  
+            <button
+              type="button"
+              class="cart-line-item__remove"
+              data-remove-item
+              aria-label="Remove Wireless Headphones from cart">
+              ✕
+            </button>
+      </div>
+    `
+  })
+  document.querySelector('.js-cart-items').innerHTML=cartHtml;
+}
