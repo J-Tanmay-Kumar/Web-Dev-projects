@@ -102,7 +102,7 @@ document.querySelectorAll('.btn-add-cart')
       <button
       type="button"
       class="cart-line-item__remove"
-      data-remove-item
+      data-remove-item="${cartItem.id}"
       aria-label="Remove Wireless Headphones from cart">
       ✕
       </button>
@@ -112,12 +112,12 @@ document.querySelectorAll('.btn-add-cart')
     document.querySelector('.js-cart-items').innerHTML=cartHtml;
     increase()
     decrease()
+    remove()
   }
-  // document.querySelector('.js-cart-quantity').innerHTML = ++cartQuantity;
-
-const increase=()=>{
-  document.querySelectorAll('.cart-line-item__qty-btn-add')
-  .forEach((button) => {
+  
+  const increase=()=>{
+    document.querySelectorAll('.cart-line-item__qty-btn-add')
+    .forEach((button) => {
       const { qtyIncrease } = button.dataset
       const Qtyadd = Number(qtyIncrease) 
       button.addEventListener("click", () => {
@@ -125,16 +125,17 @@ const increase=()=>{
         cart.forEach((cartItem)=>{
           if(Qtyadd === cartItem.id){
             cartItem.quantity++
+            document.querySelector('.js-cart-quantity').innerHTML = ++cartQuantity;
             renderCart()
           }
         })
       });
     });
-}
-
-const decrease=()=>{
-  document.querySelectorAll('.cart-line-item__qty-btn-sub')
-  .forEach((button) => {
+  }
+  
+  const decrease=()=>{
+    document.querySelectorAll('.cart-line-item__qty-btn-sub')
+    .forEach((button) => {
       const { qtyDecrease } = button.dataset
       const Qtysub = Number(qtyDecrease) 
       button.addEventListener("click", () => {
@@ -142,6 +143,7 @@ const decrease=()=>{
         cart.forEach((cartItem)=>{
           if(Qtysub === cartItem.id){
             if(cartItem.quantity>0){
+              document.querySelector('.js-cart-quantity').innerHTML = cartQuantity--;
               cartItem.quantity--
             }
             renderCart()
@@ -150,3 +152,24 @@ const decrease=()=>{
       });
     });
 }
+
+const remove = () => {
+  // 1. Added missing dot before forEach
+  document.querySelectorAll('.cart-line-item__remove').forEach((button) => { 
+    const { removeItem } = button.dataset;
+    const remItem = Number(removeItem);
+    
+    button.addEventListener("click", () => {
+      // 2. Find the correct index of the item inside the cart array
+      const index = cart.findIndex((cartItem) => cartItem.id === remItem);
+      
+      // 3. Remove the item from the cart array if it exists
+      if (index !== -1) {
+        cart.splice(index, 1);
+        
+        // Optional: Add code here to update your UI/HTML after removal
+        renderCart()
+      }
+    });
+  });
+};
