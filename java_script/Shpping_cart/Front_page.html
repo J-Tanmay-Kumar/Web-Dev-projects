@@ -120,11 +120,52 @@
 
       <!--
         CART ITEMS AREA
-        Currently shows the empty-state placeholder.
-        JavaScript will replace this content with .cart-line-item
-        elements once products are added to the cart.
+        One sample .cart-line-item is hardcoded below inside .cart-items
+        so its structure/styling can be referenced. JavaScript will
+        clear this container and render real .cart-line-item elements
+        (or the empty-state message) based on the actual cart contents.
       -->
       <div class="cart-items" data-cart-items>
+
+        <div class="cart-line-item" data-cart-item-id="1">
+
+          <img
+            src="images/headphone.png"
+            alt="Wireless Headphones"
+            class="cart-line-item__image">
+
+          <div class="cart-line-item__details">
+            <p class="cart-line-item__name">Wireless Headphones</p>
+            <p class="cart-line-item__price" data-cart-item-price>₹2499</p>
+
+            <div class="cart-line-item__qty-controls">
+              <button
+                type="button"
+                class="cart-line-item__qty-btn"
+                data-qty-decrease>−</button>
+
+              <span class="cart-line-item__qty-value" data-cart-item-qty>1</span>
+
+              <button
+                type="button"
+                class="cart-line-item__qty-btn"
+                data-qty-increase>+</button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="cart-line-item__remove"
+            data-remove-item
+            aria-label="Remove Wireless Headphones from cart">
+            ✕
+          </button>
+
+        </div>
+
+        <!-- Future .cart-line-item elements generated dynamically via JavaScript -->
+
+        <!-- Empty-state placeholder, shown instead of items when cart is empty:
         <div class="cart-empty-message" data-cart-empty>
           <span class="cart-empty-message__icon">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -136,6 +177,8 @@
           <p class="cart-empty-message__title">Your cart is empty</p>
           <p class="cart-empty-message__subtext">Items you add will show up here.</p>
         </div>
+        -->
+
       </div>
 
       <div class="cart-summary">
