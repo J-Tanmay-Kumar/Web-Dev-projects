@@ -68,46 +68,85 @@ document.querySelectorAll('.btn-add-cart')
       console.log(cart)
     })
   })
-
+  
   
   const renderCart=()=>{
-  let cartHtml ='';
-  cart.map((cartItem) => {
-    cartHtml = cartHtml + `
+    let cartHtml ='';
+    cart.map((cartItem) => {
+      cartHtml = cartHtml + `
       <div class="cart-line-item" data-cart-item-id="1">
-            <img
-              src="${cartItem.image}"
-              alt="Wireless Headphones"
-              class="cart-line-item__image">
-  
-            <div class="cart-line-item__details">
-              <p class="cart-line-item__name">${cartItem.name}</p>
-              <p class="cart-line-item__price" data-cart-item-price>${'₹'+cartItem.price}</p>
-  
-              <div class="cart-line-item__qty-controls">
-                <button
-                  type="button"
-                  class="cart-line-item__qty-btn"
-                  data-qty-decrease>−</button>
-  
-                <span class="cart-line-item__qty-value" data-cart-item-qty>${cartItem.quantity}</span>
-  
-                <button
-                  type="button"
-                  class="cart-line-item__qty-btn"
-                  data-qty-increase>+</button>
-              </div>
-            </div>
-  
-            <button
-              type="button"
-              class="cart-line-item__remove"
-              data-remove-item
-              aria-label="Remove Wireless Headphones from cart">
-              ✕
-            </button>
+      <img
+      src="${cartItem.image}"
+      alt="Wireless Headphones"
+      class="cart-line-item__image">
+      
+      <div class="cart-line-item__details">
+      <p class="cart-line-item__name">${cartItem.name}</p>
+      <p class="cart-line-item__price" data-cart-item-price>${'₹'+cartItem.price}</p>
+      
+      <div class="cart-line-item__qty-controls">
+      <button
+      type="button"
+      class="cart-line-item__qty-btn-sub"
+      data-qty-decrease=${cartItem.id}>−</button>
+      
+      <span class="cart-line-item__qty-value" data-cart-item-qty>${cartItem.quantity}</span>
+      
+      <button
+      type="button"
+      class="cart-line-item__qty-btn-add"
+      data-qty-increase=${cartItem.id}>+</button>
       </div>
-    `
-  })
-  document.querySelector('.js-cart-items').innerHTML=cartHtml;
+      </div>
+      
+      <button
+      type="button"
+      class="cart-line-item__remove"
+      data-remove-item
+      aria-label="Remove Wireless Headphones from cart">
+      ✕
+      </button>
+      </div>
+      `
+    })
+    document.querySelector('.js-cart-items').innerHTML=cartHtml;
+    increase()
+    decrease()
+  }
+  // document.querySelector('.js-cart-quantity').innerHTML = ++cartQuantity;
+
+const increase=()=>{
+  document.querySelectorAll('.cart-line-item__qty-btn-add')
+  .forEach((button) => {
+      const { qtyIncrease } = button.dataset
+      const Qtyadd = Number(qtyIncrease) 
+      button.addEventListener("click", () => {
+        console.log(Qtyadd);
+        cart.forEach((cartItem)=>{
+          if(Qtyadd === cartItem.id){
+            cartItem.quantity++
+            renderCart()
+          }
+        })
+      });
+    });
+}
+
+const decrease=()=>{
+  document.querySelectorAll('.cart-line-item__qty-btn-sub')
+  .forEach((button) => {
+      const { qtyDecrease } = button.dataset
+      const Qtysub = Number(qtyDecrease) 
+      button.addEventListener("click", () => {
+        console.log(Qtysub);
+        cart.forEach((cartItem)=>{
+          if(Qtysub === cartItem.id){
+            if(cartItem.quantity>0){
+              cartItem.quantity--
+            }
+            renderCart()
+          }
+        })
+      });
+    });
 }

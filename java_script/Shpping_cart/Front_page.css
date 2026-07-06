@@ -558,7 +558,7 @@
     margin-top: 2px;
   }
 
-  .cart-line-item__qty-btn{
+  .cart-line-item__qty-btn-add,.cart-line-item__qty-btn-sub{
     width: 24px;
     height: 24px;
     border: 1px solid var(--color-border);
