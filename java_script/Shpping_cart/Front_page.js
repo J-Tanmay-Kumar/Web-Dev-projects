@@ -68,12 +68,12 @@ document.querySelectorAll('.btn-add-cart')
       console.log(cart)
     })
   })
-  
-  
-  const renderCart=()=>{
-    let cartHtml ='';
-    cart.map((cartItem) => {
-      cartHtml = cartHtml + `
+
+
+const renderCart = () => {
+  let cartHtml = '';
+  cart.map((cartItem) => {
+    cartHtml = cartHtml + `
       <div class="cart-line-item" data-cart-item-id="1">
       <img
       src="${cartItem.image}"
@@ -82,7 +82,7 @@ document.querySelectorAll('.btn-add-cart')
       
       <div class="cart-line-item__details">
       <p class="cart-line-item__name">${cartItem.name}</p>
-      <p class="cart-line-item__price" data-cart-item-price>${'₹'+cartItem.price}</p>
+      <p class="cart-line-item__price" data-cart-item-price>${'₹' + cartItem.price/100}</p>
       
       <div class="cart-line-item__qty-controls">
       <button
@@ -108,22 +108,23 @@ document.querySelectorAll('.btn-add-cart')
       </button>
       </div>
       `
-    })
-    document.querySelector('.js-cart-items').innerHTML=cartHtml;
-    increase()
-    decrease()
-    remove()
-  }
-  
-  const increase=()=>{
-    document.querySelectorAll('.cart-line-item__qty-btn-add')
+  })
+  document.querySelector('.js-cart-items').innerHTML = cartHtml;
+  increase()
+  decrease()
+  remove()
+  renderPayment()
+}
+
+const increase = () => {
+  document.querySelectorAll('.cart-line-item__qty-btn-add')
     .forEach((button) => {
       const { qtyIncrease } = button.dataset
-      const Qtyadd = Number(qtyIncrease) 
+      const Qtyadd = Number(qtyIncrease)
       button.addEventListener("click", () => {
         console.log(Qtyadd);
-        cart.forEach((cartItem)=>{
-          if(Qtyadd === cartItem.id){
+        cart.forEach((cartItem) => {
+          if (Qtyadd === cartItem.id) {
             cartItem.quantity++
             document.querySelector('.js-cart-quantity').innerHTML = ++cartQuantity;
             renderCart()
@@ -131,18 +132,18 @@ document.querySelectorAll('.btn-add-cart')
         })
       });
     });
-  }
-  
-  const decrease=()=>{
-    document.querySelectorAll('.cart-line-item__qty-btn-sub')
+}
+
+const decrease = () => {
+  document.querySelectorAll('.cart-line-item__qty-btn-sub')
     .forEach((button) => {
       const { qtyDecrease } = button.dataset
-      const Qtysub = Number(qtyDecrease) 
+      const Qtysub = Number(qtyDecrease)
       button.addEventListener("click", () => {
         console.log(Qtysub);
-        cart.forEach((cartItem)=>{
-          if(Qtysub === cartItem.id){
-            if(cartItem.quantity>0){
+        cart.forEach((cartItem) => {
+          if (Qtysub === cartItem.id) {
+            if (cartItem.quantity > 0) {
               document.querySelector('.js-cart-quantity').innerHTML = cartQuantity--;
               cartItem.quantity--
             }
@@ -155,21 +156,47 @@ document.querySelectorAll('.btn-add-cart')
 
 const remove = () => {
   // 1. Added missing dot before forEach
-  document.querySelectorAll('.cart-line-item__remove').forEach((button) => { 
+  document.querySelectorAll('.cart-line-item__remove').forEach((button) => {
     const { removeItem } = button.dataset;
     const remItem = Number(removeItem);
-    
+
     button.addEventListener("click", () => {
       // 2. Find the correct index of the item inside the cart array
       const index = cart.findIndex((cartItem) => cartItem.id === remItem);
-      
+
       // 3. Remove the item from the cart array if it exists
       if (index !== -1) {
         cart.splice(index, 1);
-        
+
         // Optional: Add code here to update your UI/HTML after removal
         renderCart()
       }
     });
   });
 };
+
+
+const renderPayment=()=>{
+  let renderPayment = '';
+  cart.forEach((cartItem) => {
+    renderPayment = renderPayment + `
+      <div class="cart-summary__row">
+            <span>Subtotal</span>
+            <span data-cart-subtotal>$${cartItem.price/100}</span>
+      </div>
+      <div class="cart-summary__row">
+            <span>Shipping</span>
+            <span data-cart-shipping>$0.00</span>
+      </div>
+      <div class="cart-summary__row cart-summary__row--total">
+            <span>Total</span>
+            <span data-cart-total>$${cartItem.price/100}</span>
+      </div>
+      <button type="button" class="btn btn-checkout" data-checkout-btn disabled>
+            Proceed to Checkout
+      </button>
+  `
+  })
+  
+  document.querySelector('.cart-summary').innerHTML=renderPayment;
+}
