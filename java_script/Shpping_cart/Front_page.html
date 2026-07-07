@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopSphere — Shopping Cart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Front_page.css">
+</head>
+<body>
+
+<div class="site-wrapper">
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="site-header__inner">
+
+      <a href="#" class="site-logo" aria-label="ShopSphere home">
+        <span class="site-logo__mark">S</span>
+        <span class="site-logo__text">ShopSphere</span>
+      </a>
+
+      <form class="site-search" role="search" onsubmit="return false;">
+        <label for="site-search-input" class="visually-hidden">Search products</label>
+        <svg class="site-search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="text"
+          id="site-search-input"
+          class="site-search__input"
+          placeholder="Search for products, brands and more...">
+      </form>
+
+      <div class="header-actions">
+        <button type="button" class="cart-icon-button" aria-label="View cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1.5"/>
+            <circle cx="19" cy="21" r="1.5"/>
+            <path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 8H6"/>
+          </svg>
+          <span class="cart-count-badge  js-cart-quantity" data-cart-count></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============ MAIN LAYOUT ============ -->
+  <div class="app-layout">
+
+    <!-- ===== PRODUCTS ===== -->
+    <main class="products-section" aria-labelledby="products-heading">
+      <div class="products-section__header">
+        <div>
+          <h1 id="products-heading" class="products-section__heading">All Products</h1>
+          <p class="products-section__subtext">Handpicked items, ready to ship today.</p>
+        </div>
+        <span class="products-count" data-product-count>1 item</span>
+      </div>
+
+      <!--
+        PRODUCT GRID
+        Only one sample .product-card is hardcoded below.
+        JavaScript will later loop over a product data array and
+        inject additional .product-card elements into .product-grid.
+      -->
+      <div class="product-grid js-products-grid" data-product-grid >
+        <!-- Future .product-card elements generated dynamically via JavaScript -->
+
+      </div>
+    </main>
+
+    <!-- ===== CART SIDEBAR ===== -->
+    <aside class="cart-sidebar" aria-labelledby="cart-heading">
+      <div class="cart-sidebar__header">
+        <h2 id="cart-heading" class="cart-sidebar__title">Your Cart</h2>
+        <span class="cart-sidebar__count" data-cart-item-count>0 items</span>
+      </div>
+
+      <!--
+        CART ITEMS AREA
+        One sample .cart-line-item is hardcoded below inside .cart-items
+        so its structure/styling can be referenced. JavaScript will
+        clear this container and render real .cart-line-item elements
+        (or the empty-state message) based on the actual cart contents.
+      -->
+      <div class="cart-items js-cart-items" data-cart-items>
+
+        <!-- Future .cart-line-item elements generated dynamically via JavaScript -->
+
+        <!-- Empty-state placeholder, shown instead of items when cart is empty:
+        <div class="cart-empty-message" data-cart-empty>
+          <span class="cart-empty-message__icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="9" cy="21" r="1.5"/>
+              <circle cx="19" cy="21" r="1.5"/>
+              <path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 8H6"/>
+            </svg>
+          </span>
+          <p class="cart-empty-message__title">Your cart is empty</p>
+          <p class="cart-empty-message__subtext">Items you add will show up here.</p>
+        </div>
+        -->
+
+      </div>
+
+      <div class="cart-summary">
+        
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <p class="site-footer__text">&copy; 2026 ShopSphere. All rights reserved.</p>
+  </footer>
+
+</div>
+<script  type="module" src="Front_page.js"></script>
+</body>
+</html>
