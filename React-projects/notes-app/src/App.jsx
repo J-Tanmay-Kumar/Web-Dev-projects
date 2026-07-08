@@ -1,22 +1,29 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 const App = () => {
   let [title, setTitle] = useState('')
   let [note, setNote] = useState('')
-  let [task, setTask] = useState([])
+  
+  // Initialize state from localStorage if it exists, otherwise start with an empty array
+  let [task, setTask] = useState(() => {
+    const savedTasks = localStorage.getItem('notes_tasks')
+    return savedTasks ? JSON.parse(savedTasks) : []
+  })
+  
+  // Automatically sync tasks with localStorage whenever the task array changes
+  useEffect(() => {
+    localStorage.setItem('notes_tasks', JSON.stringify(task))
+  }, [task])
   
   const submitHandler = (e) => {
     e.preventDefault()
     let details = [...task]
     details.push({ title, note })
     setTask(details)
-    console.log(details)
-
+    
     setTitle('')
     setNote('')
   }
-
 
   const DeleteBtn = (idx)=>{
     let details = [...task]
