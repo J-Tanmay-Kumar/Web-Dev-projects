@@ -674,4 +674,164 @@ cd "java_script/Weather_App"
 - Cached data never expires — if the API returns fresh data tomorrow, old cached data still loads first; adding a timestamp check would fix this
 
 ---
-> Built by Tanmay · Part of the `java_script/` mini-projects collection
+# 🛒 ShopSphere — Amazon Clone
+
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![ES6 Modules](https://img.shields.io/badge/ES6-Modules-orange?style=flat)
+![localStorage](https://img.shields.io/badge/localStorage-Persistent-green?style=flat)
+
+A fully functional Amazon-style shopping app with a 4-page flow — product listing, checkout, orders, and package tracking — built with vanilla JavaScript using ES6 modules, `localStorage`, and dynamic DOM rendering.
+---
+<img width="960" height="508" alt="image" src="https://github.com/user-attachments/assets/a1fac7c6-26c0-450b-98fc-72b160e64705" />
+
+<img width="960" height="508" alt="image" src="https://github.com/user-attachments/assets/e98769e8-28cf-47a9-a756-520e3b66f118" />
+
+
+> 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+
+---
+
+## ✨ Features
+
+- ✅ Browse 42 products with ratings and prices
+- ✅ Add to cart with quantity selector and animated "Added" confirmation
+- ✅ Cart persists across page refreshes via `localStorage`
+- ✅ Update or delete items directly in the checkout page
+- ✅ Choose from 3 delivery speed options (free / $4.99 / $9.99) per item
+- ✅ Dynamic delivery date calculation using `dayjs`
+- ✅ Live order summary with item count, shipping, tax (10%), and total
+- ✅ Order history page with "Buy it again" and "Track package" buttons
+- ✅ Package tracking page with visual progress bar (Preparing → Shipped → Delivered)
+- ✅ Fully responsive grid from 8 columns (desktop) down to 1 column (mobile)
+- ✅ Basic unit test for the `money()` utility function
+
+---
+
+## 🗂️ Pages
+
+| Page | File | Purpose |
+|---|---|---|
+| Product listing | `amazon.html` | Browse all products, add to cart |
+| Checkout | `checkout.html` | Review cart, pick delivery, see total |
+| Orders | `orders.html` | View past order history |
+| Tracking | `tracking.html` | Track delivery status with progress bar |
+
+---
+
+## 🧠 Algorithm — step by step
+
+### Product page (`amazon.js`)
+
+**Step 1 — Render products**  
+`products.forEach()` loops through all 42 items in `products.js` and builds a template string per product including image, name, rating stars, price, quantity selector, and an Add to Cart button. All 42 cards are injected into `.js-products-grid` at once via `innerHTML`.
+
+**Step 2 — Load cart count**  
+`calculateCartQuantity()` sums all `quantity` values in the `cart` array and displays the total in the header's `.js-cart-quantity` badge.
+
+**Step 3 — Add to cart**  
+Clicking any Add to Cart button reads the selected quantity from `.js-quantity-selector-{id}`, calls `addToCart(productId)`, which either increments an existing cart item or pushes a new one. `saveToStorage()` writes the updated cart to `localStorage`. An "Added" message appears briefly using `setTimeout` and `opacity` toggle.
+
+---
+
+### Checkout page (`checkout.js` → `orderSummary.js` + `paymentSummary.js`)
+
+**Step 4 — Render order summary**  
+`renderOrderSummary()` loops through `cart`, matches each item to its product in `products.js` using `getProduct()`, and builds a table row per item. It uses `dayjs` to calculate delivery dates by adding `deliveryOption.deliveryTime` days to today.
+
+**Step 5 — Delivery options**  
+Three radio buttons per item (Free 7-day, $4.99 3-day, $9.99 1-day). Clicking any option calls `updateDeliveryOption(productId, deliveryOptionId)` and re-renders both the order summary and payment panel.
+
+**Step 6 — Update quantity inline**  
+Clicking "Update" adds `is-editing-quantity` class to show the input field. "Save" reads the new value, validates it (0–999), calls `updateQuantity()`, updates the visible label, and re-renders the payment summary.
+
+**Step 7 — Delete item**  
+Clicking "Delete" calls `removeFromcart(productId)`, removes the DOM element directly, and refreshes the payment summary and cart count.
+
+**Step 8 — Payment summary**  
+`renderPayment()` loops through `cart`, sums `priceCents × quantity` for all items and `priceCents` for each delivery option. Calculates total before tax, adds 10% tax, and renders the full breakdown with a Place Order button.
+
+---
+
+### Data modules
+
+**`cart.js`** — Cart state lives here. Loaded from `localStorage` on page load (with default items if empty). Four exported functions: `addToCart`, `removeFromcart`, `updatequantity`, `updatedeliveryOption`. Every mutation calls `saveToStorage()` to persist the change.
+
+**`products.js`** — Array of 42 product objects. Each has `id`, `image`, `name`, `rating`, `priceCents`, and `keywords`. Clothing items also have `type: "clothing"` and a `sizeChartLink`. Exported alongside `getProduct(id)` helper.
+
+**`deliveryOption.js`** — Array of 3 delivery option objects (`id`, `deliveryTime`, `priceCents`). Exported alongside `getdeliveryOption(id)` helper.
+
+**`utils/money.js`** — Single function that converts cents to a formatted dollar string: `money(2095) → "20.95"`. Uses `Math.round` before dividing to handle floating-point edge cases.
+
+---
+<img width="1102" height="1394" alt="image" src="https://github.com/user-attachments/assets/74748626-bdf6-47fd-95f8-24691a4e7b4b" />
+
+## 📂 Folder structure
+
+```
+ShopSphere/
+├── amazon.html               # Product listing page
+├── checkout.html             # Checkout page
+├── orders.html               # Order history page
+├── tracking.html             # Package tracking page
+│
+├── scripts/
+│   ├── amazon.js             # Product grid + add to cart logic
+│   ├── checkout.js           # Entry point for checkout page
+│   └── checkout/
+│       ├── orderSummary.js   # Cart table, delete, update, delivery options
+│       └── paymentSummary.js # Price breakdown + total + tax
+│
+├── data/
+│   ├── cart.js               # Cart state + localStorage persistence
+│   ├── products.js           # 42-item product catalog
+│   └── deliveryOption.js     # 3 delivery tiers
+│
+├── utils/
+│   └── money.js              # Cents to dollars formatter
+│
+├── tests/
+│   ├── moneytest.js          # Unit tests for money()
+│   └── moneytest.html        # Runs tests in the browser
+│
+├── styles/
+│   ├── shared/
+│   │   ├── general.css       # Global reset, buttons, typography
+│   │   └── amazon-header.css # Fixed dark header, search bar, cart icon
+│   └── pages/
+│       ├── amazon.css        # Responsive product grid (8→1 col)
+│       ├── checkout/         # Order summary + payment panel styles
+│       ├── orders.css        # Order history grid
+│       └── tracking.css      # Progress bar, delivery status
+│
+└── images/                   # Product images, logos, icons, ratings
+```
+
+---
+
+## 🚀 Run locally
+
+```bash
+git clone https://github.com/Tanmaykumae09/ShopSphere.git
+cd ShopSphere
+# open amazon.html in your browser
+# Note: use a local server (e.g. VS Code Live Server) for ES6 modules to work
+```
+
+> ⚠️ ES6 `import/export` modules don't work when opening HTML files directly via `file://`. Use Live Server or any local dev server.
+
+---
+
+## ⚠️ Known issues / things to improve
+
+- `renderexpense(expense)` bug pattern exists here too — `renderOrderSummary` should always be called after mutations to avoid stale state
+- The "Place your order" button has no functionality — clicking it does nothing; connecting it to an orders state would complete the flow
+- `orders.html` is fully static HTML — it doesn't read from `localStorage`; orders placed on the checkout page don't appear here
+- `tracking.html` is also static — delivery status is hardcoded; it should read from the order data
+- `moneytest.js` uses `console.log` for pass/fail — no proper test framework; upgrading to Jest would be a good next step
+- No search functionality on the product page despite the search bar being present in the HTML
+
+---
+
+> Built by Tanmay · ES6 Modules · localStorage · dayjs · Vanilla JS
