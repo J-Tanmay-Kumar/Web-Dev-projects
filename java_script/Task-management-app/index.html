@@ -64,43 +64,7 @@
         this list and render real .task-item elements from a tasks array,
         or show .task-empty when there are none.
       -->
-      <ul class="task-list" data-task-list>
-
-        <li class="task-item" data-task-id="1">
-          <button
-            type="button"
-            class="task-item__checkbox"
-            data-task-checkbox
-            role="checkbox"
-            aria-checked="false"
-            aria-label="Mark 'Fix the porch light switch' as complete">
-          </button>
-
-          <span class="task-item__label" data-task-label>Fix the porch light switch</span>
-
-          <button
-            type="button"
-            class="task-item__delete"
-            data-task-delete
-            aria-label="Delete 'Fix the porch light switch'">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
-          </button>
-        </li>
-
-        <!-- Example of a completed task's markup for reference:
-        <li class="task-item is-completed" data-task-id="2">
-          <button type="button" class="task-item__checkbox" data-task-checkbox role="checkbox" aria-checked="true" aria-label="Mark 'Sand the back door frame' as active"></button>
-          <span class="task-item__label" data-task-label>Sand the back door frame</span>
-          <button type="button" class="task-item__delete" data-task-delete aria-label="Delete 'Sand the back door frame'">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          </button>
-        </li>
-        -->
-
-        <!-- Future .task-item elements generated dynamically via JavaScript -->
-
+      <ul class="task-list js-task-list" data-task-list>
       </ul>
 
       <!-- Empty-state placeholder, shown instead of .task-list items when there are none:
