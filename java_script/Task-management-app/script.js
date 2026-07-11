@@ -1,4 +1,11 @@
-import { tasks } from "./data/task.js";
+import { tasks as initialTasks } from "./data/task.js";
+
+// 1. Load tasks from localStorage, or fall back to your initial data file if empty
+let tasks = JSON.parse(localStorage.getItem('punchlist_tasks'));
+if (!tasks) {
+  tasks = initialTasks;
+  localStorage.setItem('punchlist_tasks', JSON.stringify(tasks));
+}
 
 const taskInput = document.querySelector('.task-form__input');
 const addTaskButton = document.querySelector('.task-form__submit');
@@ -16,6 +23,11 @@ const emptyHtml = `
     <p class="task-empty__subtext">Add a job above to get started.</p>
   </div>
 `;
+
+// Helper function to save current state to localStorage
+const saveToStorage = () => {
+  localStorage.setItem('punchlist_tasks', JSON.stringify(tasks));
+};
 
 // Render function handles UI updates and event binding seamlessly
 const render = () => {
@@ -69,6 +81,7 @@ const attachDeleteListeners = () => {
       const taskIndex = tasks.findIndex((task) => task.id === taskId);
       if (taskIndex !== -1) {
         tasks.splice(taskIndex, 1);
+        saveToStorage(); // Save the updated array to localStorage
       }
       
       // Re-render to update the list or show the empty state
@@ -92,6 +105,7 @@ addTaskButton.addEventListener('click', (e) => {
     text: taskText,
   });
 
+  saveToStorage(); // Save the new array to localStorage
   render();
 });
 
