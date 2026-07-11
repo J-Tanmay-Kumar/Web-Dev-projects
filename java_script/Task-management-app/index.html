@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Punch List — Task Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main class="task-app-shell">
+  <section class="task-app" aria-labelledby="task-app-title">
+
+    <!-- Decorative binder spine (punched holes) -->
+    <div class="task-app__spine" aria-hidden="true">
+      <span class="task-app__hole"></span>
+      <span class="task-app__hole"></span>
+      <span class="task-app__hole"></span>
+      <span class="task-app__hole"></span>
+      <span class="task-app__hole"></span>
+      <span class="task-app__hole"></span>
+    </div>
+
+    <div class="task-app__panel">
+
+      <!-- ============ HEADER ============ -->
+      <header class="task-header">
+        <p class="task-header__eyebrow">Work Order</p>
+        <h1 id="task-app-title" class="task-header__title">Punch List</h1>
+        <p class="task-header__subtitle">One line per job. Check it off when it's done.</p>
+      </header>
+
+      <!-- ============ ADD TASK FORM ============ -->
+      <form class="task-form" data-task-form>
+        <label for="task-input" class="visually-hidden">Add a new task</label>
+        <input
+          type="text"
+          id="task-input"
+          class="task-form__input "
+          data-task-input
+          placeholder="Add an item to the list..."
+          autocomplete="off">
+        <button type="submit" class="task-form__submit" data-task-submit>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span>Add</span>
+        </button>
+      </form>
+
+      <!-- ============ FILTERS ============ -->
+      <div class="task-filters" role="tablist" aria-label="Filter tasks">
+        <button type="button" class="task-filter is-active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button type="button" class="task-filter" data-filter="active" role="tab" aria-selected="false">Active</button>
+        <button type="button" class="task-filter" data-filter="completed" role="tab" aria-selected="false">Completed</button>
+      </div>
+
+      <!-- ============ TASK LIST ============ -->
+      <!--
+        One sample .task-item is hardcoded below so its structure/states
+        (default vs. completed) can be referenced. JavaScript will clear
+        this list and render real .task-item elements from a tasks array,
+        or show .task-empty when there are none.
+      -->
+      <ul class="task-list js-task-list" data-task-list>
+      </ul>
+
+      <!-- Empty-state placeholder, shown instead of .task-list items when there are none:
+      <div class="task-empty" data-task-empty>
+        <span class="task-empty__icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </span>
+        <p class="task-empty__title">Nothing on the list</p>
+        <p class="task-empty__subtext">Add a job above to get started.</p>
+      </div>
+      -->
+
+      <!-- ============ FOOTER / STATS ============ -->
+      <footer class="task-footer">
+        <span class="task-footer__count" data-tasks-remaining>1 item left</span>
+        <button type="button" class="task-footer__clear" data-clear-completed>
+          Clear completed
+        </button>
+      </footer>
+
+    </div>
+  </section>
+</main>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
