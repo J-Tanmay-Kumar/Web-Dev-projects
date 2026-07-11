@@ -1,19 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState } from 'react';
 
-function App() {
+function HistoryCounter() {
+  const [count, setCount] = useState(0);
+  const [history, setHistory] = useState([0]);
+
+  const handleIncrement = () => {
+    const nextCount = count + 1;
+    setCount(nextCount);
+    setHistory([...history, nextCount]); // Adds new value to history
+  };
+
+  const handleDecrement = () => {
+    const nextCount = count - 1;
+    setCount(nextCount);
+    setHistory([...history, nextCount]); // Adds new value to history
+  };
+
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
-      <h1>Hello, World!</h1>
-      <p>This is a simple counter with history.</p>
-      <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-        Click Me
-      </button>
+    <div style={{ padding: '20px' }}>
+      <h2>Current Count: {count}</h2>
+      <button onClick={handleIncrement}>Increment</button>
+      <button onClick={handleDecrement}>Decrement</button>
+
+      <h3>Click History:</h3>
+      <ul>
+        {history.map((value, index) => (
+          <li key={index}>Step {index}: {value}</li>
+        ))}
+      </ul>
     </div>
-  )
+  );
 }
 
-export default App
+export default HistoryCounter;
+
