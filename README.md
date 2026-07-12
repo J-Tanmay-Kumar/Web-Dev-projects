@@ -833,5 +833,114 @@ cd ShopSphere
 - No search functionality on the product page despite the search bar being present in the HTML
 
 ---
+# 🛍️ ShopSphere — Single Page Cart App
 
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![ES6 Modules](https://img.shields.io/badge/ES6-Modules-orange?style=flat)
+
+A polished single-page e-commerce UI with a live cart sidebar — built with vanilla JavaScript ES6 modules. Products render dynamically, the cart updates in real time with quantity controls, and the payment summary recalculates on every change.
+<img width="960" height="509" alt="image" src="https://github.com/user-attachments/assets/e445c122-a3ab-43c6-8562-e9060c8da29e" />
+
+
+> 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+
+---
+
+## ✨ Features
+
+- ✅ 10 products rendered dynamically from a data module
+- ✅ Add to cart — increments if already in cart, pushes new item if not
+- ✅ Live cart sidebar with item count badge in header
+- ✅ Per-item quantity controls (+ / −) with auto-remove when quantity hits 0
+- ✅ Remove individual items with ✕ button
+- ✅ Subtotal, shipping, and total calculated live on every change
+- ✅ Checkout button disabled when cart is empty, enabled when items exist
+- ✅ Responsive layout — sidebar stacks below products on tablet/mobile
+- ✅ CSS design token system with consistent spacing, colors, and typography
+
+---
+
+## 🧠 Algorithm — step by step
+
+**Step 1 — Page load**  
+`products` is imported from `data/product.js`. An in-memory `cart = []` array is initialized. No `localStorage` — cart resets on refresh.
+
+**Step 2 — Render product grid**  
+`products.map()` builds a template string per product containing image, name, price (converted from cents with `.toFixed(2)`), rating stars, and an Add to Cart button with `data-product-id`. All cards are injected into `.js-products-grid` via `innerHTML` in a single DOM write.
+
+**Step 3 — Initial payment render**  
+`renderPayment()` runs immediately on load, showing `$0.00` totals and a disabled Checkout button — so the sidebar is never empty.
+
+**Step 4 — Add to cart**  
+Clicking any Add button reads the `data-product-id`, finds the product in `products` using `.find()`, then checks if it already exists in `cart` using `.find()`. If found, `quantity++`. If not, the full product object is spread into the cart with `quantity: 1`. Three functions are called in sequence: `updateCartQuantity()`, `renderCart()`, `renderPayment()`.
+
+**Step 5 — updateCartQuantity()**  
+Uses `.reduce()` to sum all `item.quantity` values in the cart and writes the total to the `.js-cart-quantity` badge in the header.
+
+**Step 6 — renderCart()**  
+Loops through `cart` with `.forEach()` and builds an HTML string per item including image, name, price, quantity controls (`+` / `−` buttons), and a remove button. Injects into `.js-cart-items` via `innerHTML`, then immediately calls `setupCartListeners()` to re-attach event listeners to the freshly created DOM nodes.
+
+**Step 7 — setupCartListeners()**  
+Called after every `renderCart()` because `innerHTML` replaces the DOM — old listeners are lost. It re-attaches three sets of listeners: `+` increments quantity, `−` decrements (and removes the item if it hits 0 using `.splice()`), and ✕ removes the item entirely. Each action calls the same three render functions again to keep everything in sync.
+
+**Step 8 — renderPayment()**  
+Uses `.reduce()` to sum `item.price * item.quantity` across all cart items for the subtotal. Shipping is set to `0` (free). Total = subtotal + shipping. HTML is injected into `.cart-summary`. The Checkout button gets `disabled` attribute when `cart.length === 0`.
+<img width="1102" height="1242" alt="image" src="https://github.com/user-attachments/assets/6ea4b9f1-00b2-4ae1-a1f2-3478537e2677" />
+
+---
+
+## 📂 Folder structure
+
+```
+ShopSphere-v2/
+├── Front_page.html       # Single page — header, product grid, cart sidebar
+├── Front_page.css        # Design token system + all component styles
+├── Front_page.js         # Render logic, cart state, event listeners
+└── data/
+    └── product.js        # 10-product catalog (id, name, price in cents, image)
+```
+
+---
+
+## 🎨 Design system
+
+The CSS uses a full token system via `:root` variables:
+
+| Token | Value | Use |
+|---|---|---|
+| `--color-primary` | `#205C4B` | Buttons, focus rings, logo |
+| `--color-accent` | `#C6622D` | Checkout button, sale badges |
+| `--color-bg` | `#F6F5F1` | Page background |
+| `--color-surface` | `#FFFFFF` | Cards, sidebar, header |
+| `--font-display` | Sora | Headings, prices, logo |
+| `--font-body` | Inter | Body text, labels |
+
+---
+
+## 🚀 Run locally
+
+```bash
+git clone https://github.com/Tanmaykumae09/ShopSphere.git
+cd ShopSphere-v2
+# Open Front_page.html via Live Server (required for ES6 modules)
+```
+
+> ⚠️ ES6 `import` doesn't work over `file://`. Use VS Code Live Server or any local dev server.
+
+---
+
+## ⚠️ Known issues / things to improve
+
+- Cart doesn't persist on refresh — adding `localStorage` (same pattern as the original ShopSphere) would keep the cart between sessions
+- `setupCartListeners()` re-attaches listeners after every render — this is the "re-render and re-wire" pattern; using event delegation on the parent container instead would be cleaner and more performant
+- Product category is hardcoded as `"Audio"` for every item in the template — the `product.js` data has no `category` field; worth adding one per product
+- Star rating is hardcoded as `★★★★☆` for every product — same issue, rating data isn't in `product.js`
+- The original price (`$99.99`) shown struck-through is hardcoded — should come from product data
+- No empty-state message when cart is empty — the commented-out `.cart-empty-message` HTML in `Front_page.html` exists but is never rendered by JS
+
+---
+
+> Built by Tanmay · v2 of ShopSphere · Cleaner single-page architecture
 > Built by Tanmay · ES6 Modules · localStorage · dayjs · Vanilla JS
