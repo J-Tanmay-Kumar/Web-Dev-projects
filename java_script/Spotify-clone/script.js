@@ -1,0 +1,1 @@
+console.log("Welcome to Ember Web Player");
