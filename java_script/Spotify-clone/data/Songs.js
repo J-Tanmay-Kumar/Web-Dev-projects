@@ -7,6 +7,6 @@ export const songs =
         album: "The great Gatsby",
         duration: "3:56",
         cover: "assets/covers/lana-young-and-beautiful.jpg",
-        audio:"songs/lana-del-rey-young-and-beautiful.mp3"
+        audio:"assets/songs/Young And Beautiful.mp3"
     }
 ]

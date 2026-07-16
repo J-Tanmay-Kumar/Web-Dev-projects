@@ -22,7 +22,8 @@ document.querySelector('.rail-grid').innerHTML = songHtml;
 
 const state = {
     currentSong: null,
-    isPlaying: false
+    isPlaying: false,
+    currentAudio :null
 };
 
 document.querySelectorAll('.mini-play').forEach((button) => {
@@ -31,13 +32,16 @@ document.querySelectorAll('.mini-play').forEach((button) => {
         const song = songs.find((s) => s.id === songID);
         state.currentSong = song;
         state.isPlaying = true;
+        document.querySelectorAll('.play-state').forEach((el) => el.classList.remove('is-playing'));
+        button.closest('.rail-card').querySelector('.play-state').classList.add('is-playing');
         if (state.currentSong) {
-            document.querySelectorAll('.play-state').forEach((el) => el.classList.remove('is-playing'));
-            button.closest('.rail-card').querySelector('.play-state').classList.add('is-playing');
             renderNowplaying();
         }
     });
 });
+
+
+// ... (your rail-grid code and event listeners stay exactly the same) ...
 
 const renderNowplaying = () => {
     const song = state.currentSong;
@@ -52,4 +56,20 @@ const renderNowplaying = () => {
     playerBar.querySelector('.player-bar__title').textContent = song.title;
     playerBar.querySelector('.player-bar__artist').textContent = song.artist;
     playerBar.querySelector('.progress__time__total').textContent = song.duration;
+    console.log(song.audio);
+
+    // --- FIX: Manage Audio State ---
+    
+    // 1. If a song is already playing, stop it before starting a new one
+    if (state.currentAudio) {
+        state.currentAudio.pause();
+    }
+
+    // 2. Create the new audio instance and assign it to our state object
+    state.currentAudio = new Audio(song.audio);
+    
+    // 3. Play the new audio
+    state.currentAudio.play().catch((err) => {
+        console.error("Error playing audio:", err);
+    });
 };
