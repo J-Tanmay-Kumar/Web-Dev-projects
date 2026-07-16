@@ -870,7 +870,7 @@ input:focus-visible {
   max-width: 560px;
 }
 
-.progress__time {
+.progress__time,.progress__time__total{
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   color: var(--color-text-faint);
