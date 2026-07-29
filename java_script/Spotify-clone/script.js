@@ -6,6 +6,20 @@ const state = {
   isPlaying: false
 };
 
+let songHTML = '';
+songs.forEach((song) => {
+  console.log(`Song: ${song.title}, Artist: ${song.artist}, Album: ${song.album}, Duration: ${song.duration}`);
+  songHTML += `
+  <article class="rail-card" data-song-id="1">
+    <div class="rail-card__art  art--1" aria-hidden="true"><img src="${song.cover}" alt="${song.title}" /></div>
+            <p class="rail-card__title">${song.title}</p>
+            <button type="button" class="mini-play" aria-label="Play ${song.title}" data-song-id="${song.id}">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+    </article>
+  `
+})
+document.querySelector('.rail-grid').innerHTML = songHTML;
 // -----------------------------
 // Song Selection
 // -----------------------------
@@ -34,12 +48,12 @@ const selectSong = (songId, button) => {
   state.currentSong = song;
 
   document
-    .querySelectorAll(".play-state")
+    .querySelectorAll(".rail-card__art")
     .forEach((el) => el.classList.remove("is-playing"));
 
   button
     .closest(".rail-card")
-    .querySelector(".play-state")
+    .querySelector(".rail-card__art")
     .classList.add("is-playing");
 
   renderNowPlaying();
