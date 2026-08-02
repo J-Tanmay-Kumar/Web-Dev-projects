@@ -163,10 +163,16 @@ input:focus-visible {
   flex-shrink: 0;
 }
 
-/* ---------- App shell (grid: sidebar | main) ---------- */
+/* ---------- App shell ---------- */
+/* Fix: was `display: grid; grid-template-columns: var(--sidebar-width) 1fr;`
+   paired with `.main-scroll { grid-column: 2; margin-left: var(--sidebar-width); }`.
+   Because .sidebar is position:fixed, it's removed from grid layout entirely,
+   so .main-scroll in "column 2" was ALREADY offset by --sidebar-width, and the
+   margin-left added a second, redundant offset on top of that — doubling the
+   gap. Since the sidebar is fixed-positioned (not a real grid participant),
+   plain margin-left on .main-scroll is all that's needed; the grid was doing
+   nothing useful here. */
 .app-shell {
-  display: grid;
-  grid-template-columns: var(--sidebar-width) 1fr;
   min-height: 100vh;
 }
 
@@ -343,7 +349,6 @@ input:focus-visible {
 
 /* ---------- Main column ---------- */
 .main-scroll {
-  grid-column: 2;
   margin-left: var(--sidebar-width);
   padding-bottom: calc(var(--player-height) + var(--space-6));
   min-height: 100vh;
@@ -359,6 +364,8 @@ input:focus-visible {
   height: var(--header-height);
   padding: 0 var(--space-6);
   background: rgba(12, 11, 16, 0.82);
+  /* Fix: Safari/iOS need the -webkit- prefix for backdrop-filter */
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--color-border);
 }
@@ -538,6 +545,7 @@ input:focus-visible {
   width: 56px;
   height: 56px;
   flex-shrink: 0;
+  position: relative; /* anchor for the badge */
 }
 
 .rail-card__title {
@@ -737,9 +745,14 @@ input:focus-visible {
 .art--7 { background: var(--art-7); }
 .art--8 { background: var(--art-8); }
 
+/* Fix: .artist-card__art used to be listed here too, which silently
+   overrode its earlier `border-radius: var(--radius-full)` (circular)
+   with `var(--radius-sm)` (6px), since this rule comes later in the
+   cascade at equal specificity. Artist avatars were rendering as
+   rounded squares instead of circles. Removed it from this list so
+   its dedicated circular rule above wins. */
 .rail-card__art,
 .music-card__art,
-.artist-card__art,
 .player-bar__art {
   border-radius: var(--radius-sm);
 }
@@ -1132,10 +1145,6 @@ input:focus-visible {
   }
 }
 
-.rail-card__art {
-  position: relative; /* anchor for the badge */
-}
-
 .play-state {
   position: absolute;
   bottom: 6px;
@@ -1163,6 +1172,17 @@ input:focus-visible {
   transform: scale(1);
   background: var(--gradient-ember);
   animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* Fix: script.js actually toggles `is-playing` on `.rail-card__art`
+   (the art thumbnail), not on `.rail-card` or a `.play-state` badge —
+   neither of which exists in the rendered markup. Without this rule the
+   "now playing" highlight never showed up. This gives the art itself a
+   visible ring so the class JS applies actually renders something. */
+.rail-card__art.is-playing {
+  outline: 2px solid var(--color-accent-b);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 @keyframes pulse {
