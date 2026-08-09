@@ -4,7 +4,8 @@ const state = {
   currentSong: null,
   currentAudio: new Audio(),
   currentTime: 0,
-  isPlaying: false
+  isPlaying: false,
+  isShuffle : false,
 };
 
 const PLAY_ICON = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>`;
@@ -109,11 +110,21 @@ function stepTrack(direction) {
   if (!state.currentSong) return;
 
   const currentIndex = songs.findIndex((s) => s.id === state.currentSong.id);
-  const nextIndex = (currentIndex + direction + songs.length) % songs.length;
+  let nextIndex;
+
+  if (state.isShuffle) {
+    nextIndex = Math.floor(Math.random() * songs.length);
+    
+    // If the random index matches the current song, fall back to index + 1
+    if (nextIndex === currentIndex && songs.length > 1) {
+      nextIndex = (currentIndex + 1) % songs.length;
+    }
+  } else {
+    nextIndex = (currentIndex + direction + songs.length) % songs.length;
+  }
 
   selectSong(songs[nextIndex].id);
 }
-
 // -----------------------------
 // Progress Bar Seeking
 // -----------------------------
@@ -236,6 +247,7 @@ function playCurrentSong() {
 // -----------------------------
 // Play / Pause
 // -----------------------------
+const shuffleBtn = document.querySelector('[aria-label="Shuffle"]');
 function togglePlayback() {
   if (!state.currentSong) return;
 
@@ -251,3 +263,9 @@ function togglePlayback() {
 
   updatePlayPauseUI();
 }
+
+shuffleBtn.addEventListener('click', () => {
+  state.isShuffle = !state.isShuffle;
+  shuffleBtn.setAttribute('aria-pressed', state.isShuffle);
+  console.log('Shuffle clicked, pressed state:', state.isShuffle);
+});
