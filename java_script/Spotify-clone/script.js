@@ -278,7 +278,6 @@ function togglePlayback() {
 shuffleBtn.addEventListener('click', () => {
   state.isShuffle = !state.isShuffle;
   shuffleBtn.setAttribute('aria-pressed', state.isShuffle);
-  console.log('Shuffle clicked, pressed state:', state.isShuffle);
 });
 
 
@@ -289,5 +288,20 @@ const repeatBtn = document.querySelector('[aria-label="Repeat"]')
 repeatBtn.addEventListener("click", () => {
   state.isRepeat = !state.isRepeat;
   repeatBtn.setAttribute('aria-pressed', state.isRepeat);
-  console.log('Repeat clicked, pressed state :', state.isRepeat);
+})
+
+
+// ------
+// like Feature
+// ------
+const likedsongs = [];
+const likeBtn = document.querySelector('[aria-label="Add to Liked Songs"]')
+likeBtn.addEventListener("click", () => {
+  let likedsong = state.currentSong.id;
+  // Check if the song already exists (assuming likedsongs contains objects with a 'likedsong' property)
+  const exists = likedsongs.some(song => song.likedsong === likedsong);
+  if (!exists) {
+    likedsongs.push({ likedsong });
+  }
+  console.log(likedsongs)
 })
