@@ -5,7 +5,8 @@ const state = {
   currentAudio: new Audio(),
   currentTime: 0,
   isPlaying: false,
-  isShuffle : false,
+  isShuffle: false,
+  isRepeat: false,
 };
 
 const PLAY_ICON = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>`;
@@ -114,7 +115,7 @@ function stepTrack(direction) {
 
   if (state.isShuffle) {
     nextIndex = Math.floor(Math.random() * songs.length);
-    
+
     // If the random index matches the current song, fall back to index + 1
     if (nextIndex === currentIndex && songs.length > 1) {
       nextIndex = (currentIndex + 1) % songs.length;
@@ -185,8 +186,18 @@ state.currentAudio.addEventListener("timeupdate", () => {
 // Song Finished (Fix #3 — was leaving stale UI state)
 // -----------------------------
 state.currentAudio.addEventListener("ended", () => {
-  state.isPlaying = false;
 
+  if (state.isRepeat) {
+    state.isPlaying = true;
+    state.currentAudio.currentTime = 0;
+    state.currentAudio.play().then(() => {
+      state.isPlaying = true;
+      updatePlayPauseUI();
+    });
+  } else {
+    state.isPlaying = false;
+    stepTrack(1);
+  }
   document.getElementById("track-progress").value = 0;
   document.querySelector(".progress__time").textContent = "0:00";
 
@@ -269,3 +280,14 @@ shuffleBtn.addEventListener('click', () => {
   shuffleBtn.setAttribute('aria-pressed', state.isShuffle);
   console.log('Shuffle clicked, pressed state:', state.isShuffle);
 });
+
+
+//----------------
+// REPEAT
+// ---------------
+const repeatBtn = document.querySelector('[aria-label="Repeat"]')
+repeatBtn.addEventListener("click", () => {
+  state.isRepeat = !state.isRepeat;
+  repeatBtn.setAttribute('aria-pressed', state.isRepeat);
+  console.log('Repeat clicked, pressed state :', state.isRepeat);
+})
