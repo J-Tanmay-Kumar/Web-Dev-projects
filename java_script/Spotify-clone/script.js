@@ -299,9 +299,12 @@ const likeBtn = document.querySelector('[aria-label="Add to Liked Songs"]')
 likeBtn.addEventListener("click", () => {
   let likedsong = state.currentSong.id;
   // Check if the song already exists (assuming likedsongs contains objects with a 'likedsong' property)
-  const exists = likedsongs.some(song => song.likedsong === likedsong);
+  const exists = likedsongs.includes(likedsong);
   if (!exists) {
     likedsongs.push({ likedsong });
+  }else{
+    const index = likedsongs.indexOf(likedsong);
+    likedsongs.splice(index,1)
   }
   console.log(likedsongs)
 })
