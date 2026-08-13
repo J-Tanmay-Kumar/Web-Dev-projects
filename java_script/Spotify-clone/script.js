@@ -9,29 +9,106 @@ const state = {
   isRepeat: false,
 };
 
-const PLAY_ICON = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>`;
-const PAUSE_ICON = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>`;
+// -----------------------------
+// Icons
+// -----------------------------
+
+const PLAY_ICON = `
+  <svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+    <path d="M8 5v14l11-7z"/>
+  </svg>
+`;
+
+const PAUSE_ICON = `
+  <svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+    <path d="M6 5h4v14H6zM14 5h4v14h-4z"/>
+  </svg>
+`;
+
+// -----------------------------
+// Like Feature
+// -----------------------------
+
+const likedsongs = [];
+
+const likeBtn = document.querySelector(
+  '[aria-label="Add to Liked Songs"]'
+);
+
+function updateLikeUI() {
+  if (!state.currentSong) return;
+
+  const songId = state.currentSong.id;
+  const isLiked = likedsongs.includes(songId);
+
+  if (isLiked) {
+    likeBtn.classList.add("player-bar__like__liked");
+    likeBtn.setAttribute(
+      "aria-label",
+      "Remove from Liked Songs"
+    );
+    likeBtn.setAttribute("aria-pressed", "true");
+  } else {
+    likeBtn.classList.remove("player-bar__like__liked");
+    likeBtn.setAttribute(
+      "aria-label",
+      "Add to Liked Songs"
+    );
+    likeBtn.setAttribute("aria-pressed", "false");
+  }
+}
+
+likeBtn.addEventListener("click", () => {
+  if (!state.currentSong) return;
+
+  const songId = state.currentSong.id;
+
+  const exists = likedsongs.includes(songId);
+
+  if (!exists) {
+    // Add song to liked songs
+    likedsongs.push(songId);
+  } else {
+    // Remove song from liked songs
+    const index = likedsongs.indexOf(songId);
+    likedsongs.splice(index, 1);
+  }
+
+  updateLikeUI();
+
+  console.log("Liked songs:", likedsongs);
+});
 
 // -----------------------------
 // Render Playlist
 // -----------------------------
+
 let songHTML = "";
 
 songs.forEach((song) => {
   songHTML += `
     <article class="rail-card">
+
       <div class="rail-card__art">
-        <img src="${song.cover}" alt="${song.title}">
+        <img
+          src="${song.cover}"
+          alt="${song.title}"
+        >
       </div>
 
-      <p class="rail-card__title">${song.title}</p>
+      <p class="rail-card__title">
+        ${song.title}
+      </p>
 
       <button
+        type="button"
         class="mini-play"
         data-song-id="${song.id}"
-        aria-label="Play ${song.title}">
-        ▶
+        aria-label="Play ${song.title}"
+      >
+        ${PLAY_ICON}
       </button>
+
     </article>
   `;
 });
@@ -41,6 +118,7 @@ document.querySelector(".rail-grid").innerHTML = songHTML;
 // -----------------------------
 // Helper
 // -----------------------------
+
 function formatTime(seconds) {
   if (isNaN(seconds)) return "0:00";
 
@@ -50,261 +128,540 @@ function formatTime(seconds) {
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-// Keeps the big play-toggle button (and any per-row buttons) in sync
-// with actual playback state. Fixes bug #1.
+// -----------------------------
+// Update Play / Pause UI
+// -----------------------------
+
 function updatePlayPauseUI() {
   const mainBtn = document.querySelector(".play-toggle");
-  mainBtn.innerHTML = state.isPlaying ? PAUSE_ICON : PLAY_ICON;
-  mainBtn.setAttribute("aria-label", state.isPlaying ? "Pause" : "Play");
-  mainBtn.setAttribute("aria-pressed", state.isPlaying ? "true" : "false");
 
-  document.querySelectorAll(".rail-card__art").forEach((card) => {
-    card.classList.remove("is-playing");
-  });
+  mainBtn.innerHTML = state.isPlaying
+    ? PAUSE_ICON
+    : PLAY_ICON;
 
+  mainBtn.setAttribute(
+    "aria-label",
+    state.isPlaying ? "Pause" : "Play"
+  );
+
+  mainBtn.setAttribute(
+    "aria-pressed",
+    state.isPlaying ? "true" : "false"
+  );
+
+  // Remove playing state from every song
+  document
+    .querySelectorAll(".rail-card__art")
+    .forEach((card) => {
+      card.classList.remove("is-playing");
+    });
+
+  // Add playing state to current song
   if (state.isPlaying && state.currentSong) {
     const activeBtn = document.querySelector(
       `.mini-play[data-song-id="${state.currentSong.id}"]`
     );
+
     if (activeBtn) {
-      activeBtn.closest(".rail-card").querySelector(".rail-card__art")
+      const card = activeBtn.closest(".rail-card");
+
+      card
+        .querySelector(".rail-card__art")
         .classList.add("is-playing");
     }
   }
 }
 
 // -----------------------------
-// Select Song (mini-play buttons)
+// Mini Play Buttons
 // -----------------------------
-document.querySelectorAll(".mini-play").forEach((button) => {
-  button.addEventListener("click", () => {
-    const songId = Number(button.dataset.songId);
 
-    // Fix #2: clicking the mini-play button of the song that is
-    // ALREADY selected should toggle play/pause, not restart it.
-    if (state.currentSong && state.currentSong.id === songId) {
-      togglePlayback();
-      return;
-    }
+document
+  .querySelectorAll(".mini-play")
+  .forEach((button) => {
 
-    selectSong(songId);
+    button.addEventListener("click", () => {
+
+      const songId = Number(
+        button.dataset.songId
+      );
+
+      // Same song → play/pause
+      if (
+        state.currentSong &&
+        state.currentSong.id === songId
+      ) {
+        togglePlayback();
+        return;
+      }
+
+      // Different song → select it
+      selectSong(songId);
+    });
+
   });
+
+// -----------------------------
+// Main Play / Pause Button
+// -----------------------------
+
+document
+  .querySelector(".play-toggle")
+  .addEventListener(
+    "click",
+    togglePlayback
+  );
+
+// -----------------------------
+// Previous Track
+// -----------------------------
+
+document
+  .querySelector('[aria-label="Previous track"]')
+  .addEventListener("click", () => {
+    stepTrack(-1);
+  });
+
+// -----------------------------
+// Next Track
+// -----------------------------
+
+document
+  .querySelector('[aria-label="Next track"]')
+  .addEventListener("click", () => {
+    stepTrack(1);
+  });
+
+// -----------------------------
+// Shuffle
+// -----------------------------
+
+const shuffleBtn = document.querySelector(
+  '[aria-label="Shuffle"]'
+);
+
+shuffleBtn.addEventListener("click", () => {
+
+  state.isShuffle = !state.isShuffle;
+
+  shuffleBtn.setAttribute(
+    "aria-pressed",
+    state.isShuffle
+  );
+
+  console.log(
+    "Shuffle:",
+    state.isShuffle
+  );
 });
 
 // -----------------------------
-// Play Toggle
+// Repeat
 // -----------------------------
-document
-  .querySelector(".play-toggle")
-  .addEventListener("click", togglePlayback);
+
+const repeatBtn = document.querySelector(
+  '[aria-label="Repeat"]'
+);
+
+repeatBtn.addEventListener("click", () => {
+
+  state.isRepeat = !state.isRepeat;
+
+  repeatBtn.setAttribute(
+    "aria-pressed",
+    state.isRepeat
+  );
+
+  console.log(
+    "Repeat:",
+    state.isRepeat
+  );
+});
 
 // -----------------------------
-// Previous / Next
+// Step Track
 // -----------------------------
-document.querySelector('[aria-label="Previous track"]')
-  .addEventListener("click", () => stepTrack(-1));
-
-document.querySelector('[aria-label="Next track"]')
-  .addEventListener("click", () => stepTrack(1));
 
 function stepTrack(direction) {
+
   if (!state.currentSong) return;
 
-  const currentIndex = songs.findIndex((s) => s.id === state.currentSong.id);
+  const currentIndex = songs.findIndex(
+    (song) =>
+      song.id === state.currentSong.id
+  );
+
   let nextIndex;
 
   if (state.isShuffle) {
-    nextIndex = Math.floor(Math.random() * songs.length);
 
-    // If the random index matches the current song, fall back to index + 1
-    if (nextIndex === currentIndex && songs.length > 1) {
-      nextIndex = (currentIndex + 1) % songs.length;
+    nextIndex = Math.floor(
+      Math.random() * songs.length
+    );
+
+    // Don't select the same song
+    if (
+      nextIndex === currentIndex &&
+      songs.length > 1
+    ) {
+      nextIndex =
+        (currentIndex + 1) % songs.length;
     }
+
   } else {
-    nextIndex = (currentIndex + direction + songs.length) % songs.length;
+
+    nextIndex =
+      (currentIndex +
+        direction +
+        songs.length) %
+      songs.length;
   }
 
   selectSong(songs[nextIndex].id);
 }
+
 // -----------------------------
 // Progress Bar Seeking
 // -----------------------------
-document
-  .getElementById("track-progress")
-  .addEventListener("input", (e) => {
-    state.currentAudio.currentTime = Number(e.target.value);
-  });
 
-// -----------------------------
-// Volume / Mute (Fix #4 — previously unwired)
-// -----------------------------
-const volumeInput = document.getElementById("volume");
-let lastVolume = Number(volumeInput.value) / 100;
+const progressSlider =
+  document.getElementById(
+    "track-progress"
+  );
 
-state.currentAudio.volume = lastVolume;
+progressSlider.addEventListener(
+  "input",
+  (e) => {
 
-volumeInput.addEventListener("input", (e) => {
-  const vol = Number(e.target.value) / 100;
-  state.currentAudio.volume = vol;
-  state.currentAudio.muted = false;
-  if (vol > 0) lastVolume = vol;
-});
+    const targetTime =
+      Number(e.target.value);
 
-document.querySelector('[aria-label="Mute"]').addEventListener("click", (e) => {
-  const btn = e.currentTarget;
-  state.currentAudio.muted = !state.currentAudio.muted;
+    state.currentAudio.currentTime =
+      targetTime;
 
-  if (state.currentAudio.muted) {
-    btn.setAttribute("aria-label", "Unmute");
-    volumeInput.value = 0;
-  } else {
-    btn.setAttribute("aria-label", "Mute");
-    volumeInput.value = Math.round((lastVolume || 0.7) * 100);
-    state.currentAudio.volume = lastVolume || 0.7;
+    state.currentTime =
+      targetTime;
+
+    document.querySelector(
+      ".progress__time"
+    ).textContent =
+      formatTime(targetTime);
   }
-});
+);
 
 // -----------------------------
-// Time Update
+// Volume
 // -----------------------------
-state.currentAudio.addEventListener("loadedmetadata", () => {
-  document.getElementById("track-progress").max =
-    Math.floor(state.currentAudio.duration);
-});
 
-state.currentAudio.addEventListener("timeupdate", () => {
-  state.currentTime = state.currentAudio.currentTime;
+const volumeInput =
+  document.getElementById("volume");
 
-  document.querySelector(".progress__time").textContent =
-    formatTime(state.currentTime);
+let lastVolume =
+  Number(volumeInput.value) / 100;
 
-  document.getElementById("track-progress").value =
-    Math.floor(state.currentTime);
-});
+state.currentAudio.volume =
+  lastVolume;
 
-// -----------------------------
-// Song Finished (Fix #3 — was leaving stale UI state)
-// -----------------------------
-state.currentAudio.addEventListener("ended", () => {
+volumeInput.addEventListener(
+  "input",
+  (e) => {
 
-  if (state.isRepeat) {
-    state.isPlaying = true;
-    state.currentAudio.currentTime = 0;
-    state.currentAudio.play().then(() => {
-      state.isPlaying = true;
-      updatePlayPauseUI();
-    });
-  } else {
-    state.isPlaying = false;
-    stepTrack(1);
+    const volume =
+      Number(e.target.value) / 100;
+
+    state.currentAudio.volume =
+      volume;
+
+    state.currentAudio.muted =
+      false;
+
+    if (volume > 0) {
+      lastVolume = volume;
+    }
   }
-  document.getElementById("track-progress").value = 0;
-  document.querySelector(".progress__time").textContent = "0:00";
+);
 
-  updatePlayPauseUI();
-});
+// -----------------------------
+// Mute / Unmute
+// -----------------------------
+
+const muteBtn =
+  document.querySelector(
+    '[aria-label="Mute"]'
+  );
+
+muteBtn.addEventListener(
+  "click",
+  () => {
+
+    state.currentAudio.muted =
+      !state.currentAudio.muted;
+
+    if (
+      state.currentAudio.muted
+    ) {
+
+      muteBtn.setAttribute(
+        "aria-label",
+        "Unmute"
+      );
+
+      volumeInput.value = 0;
+
+    } else {
+
+      muteBtn.setAttribute(
+        "aria-label",
+        "Mute"
+      );
+
+      const volume =
+        lastVolume || 0.7;
+
+      volumeInput.value =
+        Math.round(volume * 100);
+
+      state.currentAudio.volume =
+        volume;
+    }
+  }
+);
+
+// -----------------------------
+// Audio Metadata Loaded
+// -----------------------------
+
+state.currentAudio.addEventListener(
+  "loadedmetadata",
+  () => {
+
+    const duration =
+      state.currentAudio.duration;
+
+    if (!isNaN(duration)) {
+
+      progressSlider.max =
+        Math.floor(duration);
+    }
+
+    progressSlider.value = 0;
+  }
+);
+
+// -----------------------------
+// Audio Time Update
+// -----------------------------
+
+state.currentAudio.addEventListener(
+  "timeupdate",
+  () => {
+
+    state.currentTime =
+      state.currentAudio.currentTime;
+
+    document.querySelector(
+      ".progress__time"
+    ).textContent =
+      formatTime(
+        state.currentTime
+      );
+
+    progressSlider.value =
+      Math.floor(
+        state.currentTime
+      );
+  }
+);
+
+// -----------------------------
+// Song Finished
+// -----------------------------
+
+state.currentAudio.addEventListener(
+  "ended",
+  () => {
+
+    if (state.isRepeat) {
+
+      // Replay same song
+      state.currentAudio.currentTime =
+        0;
+
+      state.currentAudio
+        .play()
+        .then(() => {
+
+          state.isPlaying = true;
+
+          updatePlayPauseUI();
+
+        })
+        .catch(console.error);
+
+    } else {
+
+      // Go to next song
+      state.isPlaying = false;
+
+      stepTrack(1);
+    }
+
+    progressSlider.value = 0;
+
+    document.querySelector(
+      ".progress__time"
+    ).textContent = "0:00";
+
+    updatePlayPauseUI();
+  }
+);
 
 // -----------------------------
 // Select Song
 // -----------------------------
+
 function selectSong(songId) {
-  const song = songs.find((s) => s.id === songId);
+
+  const song = songs.find(
+    (song) => song.id === songId
+  );
 
   if (!song) return;
 
   state.currentSong = song;
 
   renderNowPlaying();
+
   playCurrentSong();
 }
 
 // -----------------------------
-// Update Bottom Player
+// Render Now Playing
 // -----------------------------
+
 function renderNowPlaying() {
-  const song = state.currentSong;
 
-  document.querySelector(".player-bar__art img").src = song.cover;
-  document.querySelector(".player-bar__art img").alt = song.title;
+  const song =
+    state.currentSong;
 
-  document.querySelector(".player-bar__title").textContent = song.title;
-  document.querySelector(".player-bar__artist").textContent = song.artist;
+  if (!song) return;
 
-  document.querySelector(".progress__time").textContent = "0:00";
-  document.querySelector(".progress__time__total").textContent = song.duration;
+  const playerArt =
+    document.querySelector(
+      ".player-bar__art img"
+    );
 
-  document.getElementById("track-progress").value = 0;
+  const playerTitle =
+    document.querySelector(
+      ".player-bar__title"
+    );
+
+  const playerArtist =
+    document.querySelector(
+      ".player-bar__artist"
+    );
+
+  const currentTime =
+    document.querySelector(
+      ".progress__time"
+    );
+
+  const totalTime =
+    document.querySelector(
+      ".progress__time__total"
+    );
+
+  playerArt.src =
+    song.cover;
+
+  playerArt.alt =
+    song.title;
+
+  playerTitle.textContent =
+    song.title;
+
+  playerArtist.textContent =
+    song.artist;
+
+  currentTime.textContent =
+    "0:00";
+
+  totalTime.textContent =
+    song.duration;
+
+  progressSlider.value = 0;
+
+  // Update Like UI for the newly selected song
+  updateLikeUI();
 }
 
 // -----------------------------
-// Play Song
+// Play Current Song
 // -----------------------------
+
 function playCurrentSong() {
-  const audio = state.currentAudio;
+
+  const audio =
+    state.currentAudio;
 
   audio.pause();
+
   audio.currentTime = 0;
-  audio.src = state.currentSong.audio;
+
+  audio.src =
+    state.currentSong.audio;
+
   audio.load();
 
-  audio.play()
+  audio
+    .play()
     .then(() => {
+
       state.isPlaying = true;
+
       updatePlayPauseUI();
+
     })
-    .catch(console.error);
+    .catch((error) => {
+      console.error(
+        "Audio playback error:",
+        error
+      );
+    });
 }
 
 // -----------------------------
 // Play / Pause
 // -----------------------------
-const shuffleBtn = document.querySelector('[aria-label="Shuffle"]');
+
 function togglePlayback() {
+
   if (!state.currentSong) return;
 
-  const audio = state.currentAudio;
+  const audio =
+    state.currentAudio;
 
   if (state.isPlaying) {
+
     audio.pause();
+
     state.isPlaying = false;
+
   } else {
-    audio.play();
-    state.isPlaying = true;
+
+    audio
+      .play()
+      .then(() => {
+
+        state.isPlaying = true;
+
+        updatePlayPauseUI();
+
+      })
+      .catch(console.error);
+
+    return;
   }
 
   updatePlayPauseUI();
 }
-
-shuffleBtn.addEventListener('click', () => {
-  state.isShuffle = !state.isShuffle;
-  shuffleBtn.setAttribute('aria-pressed', state.isShuffle);
-});
-
-
-//----------------
-// REPEAT
-// ---------------
-const repeatBtn = document.querySelector('[aria-label="Repeat"]')
-repeatBtn.addEventListener("click", () => {
-  state.isRepeat = !state.isRepeat;
-  repeatBtn.setAttribute('aria-pressed', state.isRepeat);
-})
-
-
-// ------
-// like Feature
-// ------
-const likedsongs = [];
-const likeBtn = document.querySelector('[aria-label="Add to Liked Songs"]')
-likeBtn.addEventListener("click", () => {
-  let likedsong = state.currentSong.id;
-  // Check if the song already exists (assuming likedsongs contains objects with a 'likedsong' property)
-  const exists = likedsongs.includes(likedsong);
-  if (!exists) {
-    likedsongs.push({ likedsong });
-  }else{
-    const index = likedsongs.indexOf(likedsong);
-    likedsongs.splice(index,1)
-  }
-  console.log(likedsongs)
-})

@@ -1116,6 +1116,10 @@ input:focus-visible {
     display: none;
   }
 
+  .player-bar__like__liked {
+  color: var(--color-accent-a);
+}
+
   .player-bar__controls {
     gap: var(--space-1);
   }
