@@ -833,31 +833,139 @@ cd ShopSphere
 - No search functionality on the product page despite the search bar being present in the HTML
 
 ---
-# 🛍️ ShopSphere — Single Page Cart App
+    # 🛍️ ShopSphere — Single Page Cart App
+    
+    ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+    ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+    ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+    ![ES6 Modules](https://img.shields.io/badge/ES6-Modules-orange?style=flat)
+    
+    A polished single-page e-commerce UI with a live cart sidebar — built with vanilla JavaScript ES6 modules. Products render dynamically, the cart updates in real time with quantity controls, and the payment summary recalculates on every change.
+    <img width="960" height="509" alt="image" src="https://github.com/user-attachments/assets/e445c122-a3ab-43c6-8562-e9060c8da29e" />
+    
+    
+    > 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+    
+    ---
+    
+    ## ✨ Features
+    
+    - ✅ 10 products rendered dynamically from a data module
+    - ✅ Add to cart — increments if already in cart, pushes new item if not
+    - ✅ Live cart sidebar with item count badge in header
+    - ✅ Per-item quantity controls (+ / −) with auto-remove when quantity hits 0
+    - ✅ Remove individual items with ✕ button
+    - ✅ Subtotal, shipping, and total calculated live on every change
+    - ✅ Checkout button disabled when cart is empty, enabled when items exist
+    - ✅ Responsive layout — sidebar stacks below products on tablet/mobile
+    - ✅ CSS design token system with consistent spacing, colors, and typography
+    
+    ---
+    
+    ## 🧠 Algorithm — step by step
+    
+    **Step 1 — Page load**  
+    `products` is imported from `data/product.js`. An in-memory `cart = []` array is initialized. No `localStorage` — cart resets on refresh.
+    
+    **Step 2 — Render product grid**  
+    `products.map()` builds a template string per product containing image, name, price (converted from cents with `.toFixed(2)`), rating stars, and an Add to Cart button with `data-product-id`. All cards are injected into `.js-products-grid` via `innerHTML` in a single DOM write.
+    
+    **Step 3 — Initial payment render**  
+    `renderPayment()` runs immediately on load, showing `$0.00` totals and a disabled Checkout button — so the sidebar is never empty.
+    
+    **Step 4 — Add to cart**  
+    Clicking any Add button reads the `data-product-id`, finds the product in `products` using `.find()`, then checks if it already exists in `cart` using `.find()`. If found, `quantity++`. If not, the full product object is spread into the cart with `quantity: 1`. Three functions are called in sequence: `updateCartQuantity()`, `renderCart()`, `renderPayment()`.
+    
+    **Step 5 — updateCartQuantity()**  
+    Uses `.reduce()` to sum all `item.quantity` values in the cart and writes the total to the `.js-cart-quantity` badge in the header.
+    
+    **Step 6 — renderCart()**  
+    Loops through `cart` with `.forEach()` and builds an HTML string per item including image, name, price, quantity controls (`+` / `−` buttons), and a remove button. Injects into `.js-cart-items` via `innerHTML`, then immediately calls `setupCartListeners()` to re-attach event listeners to the freshly created DOM nodes.
+    
+    **Step 7 — setupCartListeners()**  
+    Called after every `renderCart()` because `innerHTML` replaces the DOM — old listeners are lost. It re-attaches three sets of listeners: `+` increments quantity, `−` decrements (and removes the item if it hits 0 using `.splice()`), and ✕ removes the item entirely. Each action calls the same three render functions again to keep everything in sync.
+    
+    **Step 8 — renderPayment()**  
+    Uses `.reduce()` to sum `item.price * item.quantity` across all cart items for the subtotal. Shipping is set to `0` (free). Total = subtotal + shipping. HTML is injected into `.cart-summary`. The Checkout button gets `disabled` attribute when `cart.length === 0`.
+    <img width="1102" height="1242" alt="image" src="https://github.com/user-attachments/assets/6ea4b9f1-00b2-4ae1-a1f2-3478537e2677" />
+    
+    ---
+    
+    ## 📂 Folder structure
+    
+    ```
+    ShopSphere-v2/
+    ├── Front_page.html       # Single page — header, product grid, cart sidebar
+    ├── Front_page.css        # Design token system + all component styles
+    ├── Front_page.js         # Render logic, cart state, event listeners
+    └── data/
+        └── product.js        # 10-product catalog (id, name, price in cents, image)
+    ```
+    
+    ---
+    
+    ## 🎨 Design system
+    
+    The CSS uses a full token system via `:root` variables:
+    
+    | Token | Value | Use |
+    |---|---|---|
+    | `--color-primary` | `#205C4B` | Buttons, focus rings, logo |
+    | `--color-accent` | `#C6622D` | Checkout button, sale badges |
+    | `--color-bg` | `#F6F5F1` | Page background |
+    | `--color-surface` | `#FFFFFF` | Cards, sidebar, header |
+    | `--font-display` | Sora | Headings, prices, logo |
+    | `--font-body` | Inter | Body text, labels |
+    
+    ---
+    
+    ## 🚀 Run locally
+    
+    ```bash
+    git clone https://github.com/Tanmaykumae09/ShopSphere.git
+    cd ShopSphere-v2
+    # Open Front_page.html via Live Server (required for ES6 modules)
+    ```
+    
+    > ⚠️ ES6 `import` doesn't work over `file://`. Use VS Code Live Server or any local dev server.
+    
+    ---
+    
+    ## ⚠️ Known issues / things to improve
+    
+    - Cart doesn't persist on refresh — adding `localStorage` (same pattern as the original ShopSphere) would keep the cart between sessions
+    - `setupCartListeners()` re-attaches listeners after every render — this is the "re-render and re-wire" pattern; using event delegation on the parent container instead would be cleaner and more performant
+    - Product category is hardcoded as `"Audio"` for every item in the template — the `product.js` data has no `category` field; worth adding one per product
+    - Star rating is hardcoded as `★★★★☆` for every product — same issue, rating data isn't in `product.js`
+    - The original price (`$99.99`) shown struck-through is hardcoded — should come from product data
+    - No empty-state message when cart is empty — the commented-out `.cart-empty-message` HTML in `Front_page.html` exists but is never rendered by JS
+
+---
+
+
+
+
+# 📋 Punch List — Task Management App
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 ![ES6 Modules](https://img.shields.io/badge/ES6-Modules-orange?style=flat)
+<img width="948" height="530" alt="image" src="https://github.com/user-attachments/assets/d2820cf2-1339-4dd5-a72b-4966778ceeac" />
+A clean, single-page to-do list styled like a paper punch list — built with vanilla JavaScript ES6 modules. Tasks are added and deleted live, the list persists across refreshes via `localStorage`, and an empty-state view kicks in when the list is cleared.
 
-A polished single-page e-commerce UI with a live cart sidebar — built with vanilla JavaScript ES6 modules. Products render dynamically, the cart updates in real time with quantity controls, and the payment summary recalculates on every change.
-<img width="960" height="509" alt="image" src="https://github.com/user-attachments/assets/e445c122-a3ab-43c6-8562-e9060c8da29e" />
-
-
-> 🚧 Currently making things look pretty — the part where it actually *does* something is a future Tanmay problem.
+> 🚧 The binder-spine look, filters, and checkboxes are in place — wiring up "mark complete" and filtering is a future problem.
 
 ---
 
 ## ✨ Features
 
-- ✅ 10 products rendered dynamically from a data module
-- ✅ Add to cart — increments if already in cart, pushes new item if not
-- ✅ Live cart sidebar with item count badge in header
-- ✅ Per-item quantity controls (+ / −) with auto-remove when quantity hits 0
-- ✅ Remove individual items with ✕ button
-- ✅ Subtotal, shipping, and total calculated live on every change
-- ✅ Checkout button disabled when cart is empty, enabled when items exist
-- ✅ Responsive layout — sidebar stacks below products on tablet/mobile
+- ✅ Add new tasks via a simple input + submit button
+- ✅ Tasks persist across page refreshes using `localStorage`
+- ✅ Remove individual tasks with the ✕ delete button
+- ✅ Empty-state view (icon + message) shown automatically when the list is cleared
+- ✅ Punch-card visual design — decorative binder spine with punched holes
+- ✅ Responsive layout — full-bleed on mobile, centered card on desktop
 - ✅ CSS design token system with consistent spacing, colors, and typography
 
 ---
@@ -865,41 +973,34 @@ A polished single-page e-commerce UI with a live cart sidebar — built with van
 ## 🧠 Algorithm — step by step
 
 **Step 1 — Page load**  
-`products` is imported from `data/product.js`. An in-memory `cart = []` array is initialized. No `localStorage` — cart resets on refresh.
+`tasks` is imported from `data/task.js` (starts as an empty array). On load, `localStorage.getItem('punchlist_tasks')` is checked first — if it returns data, that becomes the working `tasks` array; if it's empty, the imported `initialTasks` is used instead and immediately saved back to `localStorage`.
 
-**Step 2 — Render product grid**  
-`products.map()` builds a template string per product containing image, name, price (converted from cents with `.toFixed(2)`), rating stars, and an Add to Cart button with `data-product-id`. All cards are injected into `.js-products-grid` via `innerHTML` in a single DOM write.
+**Step 2 — render()**  
+If `tasks.length === 0`, a pre-built `emptyHtml` string (icon + "Nothing on the list") is injected into `.js-task-list` and rendering stops there. Otherwise, `tasks.forEach()` builds an HTML string per task containing a checkbox button, the task label, and a delete button with `data-task-id`. The full string is injected via `innerHTML` in one DOM write.
 
-**Step 3 — Initial payment render**  
-`renderPayment()` runs immediately on load, showing `$0.00` totals and a disabled Checkout button — so the sidebar is never empty.
+**Step 3 — attachDeleteListeners()**  
+Called at the end of every `render()`, since `innerHTML` wipes out any listeners attached to the previous DOM nodes. It queries all `.task-item__delete` buttons and attaches a fresh click listener to each one.
 
-**Step 4 — Add to cart**  
-Clicking any Add button reads the `data-product-id`, finds the product in `products` using `.find()`, then checks if it already exists in `cart` using `.find()`. If found, `quantity++`. If not, the full product object is spread into the cart with `quantity: 1`. Three functions are called in sequence: `updateCartQuantity()`, `renderCart()`, `renderPayment()`.
+**Step 4 — Add task**  
+Clicking the submit button calls `e.preventDefault()`, trims the input value, and — if non-empty — pushes a new task object (`{ id: Date.now(), text }`) onto the `tasks` array, clears the input, calls `saveToStorage()`, then `render()`.
 
-**Step 5 — updateCartQuantity()**  
-Uses `.reduce()` to sum all `item.quantity` values in the cart and writes the total to the `.js-cart-quantity` badge in the header.
+**Step 5 — Delete task**  
+Clicking a ✕ button walks up to the parent `.task-item` via `.closest()`, reads its `data-task-id`, finds the matching task with `.findIndex()`, and removes it with `.splice()`. `saveToStorage()` and `render()` are called again to sync the UI.
 
-**Step 6 — renderCart()**  
-Loops through `cart` with `.forEach()` and builds an HTML string per item including image, name, price, quantity controls (`+` / `−` buttons), and a remove button. Injects into `.js-cart-items` via `innerHTML`, then immediately calls `setupCartListeners()` to re-attach event listeners to the freshly created DOM nodes.
-
-**Step 7 — setupCartListeners()**  
-Called after every `renderCart()` because `innerHTML` replaces the DOM — old listeners are lost. It re-attaches three sets of listeners: `+` increments quantity, `−` decrements (and removes the item if it hits 0 using `.splice()`), and ✕ removes the item entirely. Each action calls the same three render functions again to keep everything in sync.
-
-**Step 8 — renderPayment()**  
-Uses `.reduce()` to sum `item.price * item.quantity` across all cart items for the subtotal. Shipping is set to `0` (free). Total = subtotal + shipping. HTML is injected into `.cart-summary`. The Checkout button gets `disabled` attribute when `cart.length === 0`.
-<img width="1102" height="1242" alt="image" src="https://github.com/user-attachments/assets/6ea4b9f1-00b2-4ae1-a1f2-3478537e2677" />
+**Step 6 — saveToStorage()**  
+Serializes the current `tasks` array with `JSON.stringify()` and writes it to `localStorage` under the key `punchlist_tasks`, so the list survives a page refresh.
 
 ---
 
 ## 📂 Folder structure
 
 ```
-ShopSphere-v2/
-├── Front_page.html       # Single page — header, product grid, cart sidebar
-├── Front_page.css        # Design token system + all component styles
-├── Front_page.js         # Render logic, cart state, event listeners
+Task-management-app/
+├── index.html         # Single page — header, add-task form, filters, task list
+├── style.css           # Design token system + all component styles
+├── script.js           # Render logic, task state, event listeners, localStorage
 └── data/
-    └── product.js        # 10-product catalog (id, name, price in cents, image)
+    └── task.js         # Initial task seed array (empty by default)
 ```
 
 ---
@@ -910,21 +1011,22 @@ The CSS uses a full token system via `:root` variables:
 
 | Token | Value | Use |
 |---|---|---|
-| `--color-primary` | `#205C4B` | Buttons, focus rings, logo |
-| `--color-accent` | `#C6622D` | Checkout button, sale badges |
-| `--color-bg` | `#F6F5F1` | Page background |
-| `--color-surface` | `#FFFFFF` | Cards, sidebar, header |
-| `--font-display` | Sora | Headings, prices, logo |
-| `--font-body` | Inter | Body text, labels |
+| `--color-accent` | `#6B5FA8` | Buttons, checkboxes, focus rings |
+| `--color-amber` | `#C9762F` | "Work Order" eyebrow label |
+| `--color-danger` | `#B8493A` | Delete hover state, "Clear completed" hover |
+| `--color-bg` | `#EEF0F4` | Page background |
+| `--color-panel` | `#FFFFFF` | Card surface |
+| `--font-display` | Fraunces | Title, empty-state heading |
+| `--font-body` | Work Sans | Body text, labels, buttons |
 
 ---
 
 ## 🚀 Run locally
 
 ```bash
-git clone https://github.com/Tanmaykumae09/ShopSphere.git
-cd ShopSphere-v2
-# Open Front_page.html via Live Server (required for ES6 modules)
+git clone <your-repo-url>
+cd Task-management-app
+# Open index.html via Live Server (required for ES6 modules)
 ```
 
 > ⚠️ ES6 `import` doesn't work over `file://`. Use VS Code Live Server or any local dev server.
@@ -933,14 +1035,9 @@ cd ShopSphere-v2
 
 ## ⚠️ Known issues / things to improve
 
-- Cart doesn't persist on refresh — adding `localStorage` (same pattern as the original ShopSphere) would keep the cart between sessions
-- `setupCartListeners()` re-attaches listeners after every render — this is the "re-render and re-wire" pattern; using event delegation on the parent container instead would be cleaner and more performant
-- Product category is hardcoded as `"Audio"` for every item in the template — the `product.js` data has no `category` field; worth adding one per product
-- Star rating is hardcoded as `★★★★☆` for every product — same issue, rating data isn't in `product.js`
-- The original price (`$99.99`) shown struck-through is hardcoded — should come from product data
-- No empty-state message when cart is empty — the commented-out `.cart-empty-message` HTML in `Front_page.html` exists but is never rendered by JS
-
----
-
-> Built by Tanmay · v2 of ShopSphere · Cleaner single-page architecture
-> Built by Tanmay · ES6 Modules · localStorage · dayjs · Vanilla JS
+- Checkbox click doesn't do anything yet — there's no `.is-completed` toggle logic or `completed` field on the task object, even though the CSS already supports a checked/struck-through state
+- The **All / Active / Completed** filter buttons in `index.html` have no click listeners or filtering logic behind them — every task always shows regardless of which tab is active
+- The footer's `data-tasks-remaining` count is hardcoded as `"1 item left"` in the HTML and never recalculated by JS — should use `tasks.filter()` to reflect the real count
+- **Clear completed** button has no event listener wired up
+- `data/task.js` ships with an empty `tasks` array, so the app starts blank on first load with no sample data to reference
+- Only a click listener is attached to the submit button — no `submit` listener on `.task-form` itself, which is a less resilient pattern than handling the form's native submit event
