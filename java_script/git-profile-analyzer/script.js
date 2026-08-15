@@ -1,10 +1,144 @@
-    const URL = "https://api.github.com/users/octocat"
-
+    const URL = "https://api.github.com/users/octocat";
+    
     let dataHTML = '';
     async function display() {
         let response = await fetch(URL)
         let data = await response.json();
         const UserDetails = data;
+
+        // REPO_DATA
+        const Repo_URL = data.repos_url;
+        let repo_response = await fetch(Repo_URL);
+        let repo_data = await repo_response.json();
+        const User_repo = repo_data; 
+const repoHTML = User_repo.map((repo) => {
+  return `
+    <div class="repo-card">
+
+      <div class="repo-card-top">
+
+        <div class="repo-title-wrapper">
+
+          <svg
+            class="repo-icon"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+            <path d="M6 6h12M6 10h12"/>
+          </svg>
+
+          <a
+            href="${repo.html_url}"
+            class="repo-name"
+            target="_blank"
+            rel="noopener">
+            ${repo.full_name}
+          </a>
+
+        </div>
+
+        <span class="repo-badge">
+          ${repo.visibility}
+        </span>
+
+      </div>
+
+
+      <p class="repo-description">
+        ${repo.description ?? "No description available."}
+      </p>
+
+
+      <div class="repo-meta-footer">
+
+        <span class="repo-lang">
+          <span
+            class="dot"
+            style="background-color: #e34c26;">
+          </span>
+          ${repo.language ?? "Unknown"}
+        </span>
+
+
+        <div class="repo-stats-pills">
+
+          <span class="repo-stat">
+
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+
+            ${repo.stargazers_count}
+
+          </span>
+
+
+          <span class="repo-stat">
+
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2">
+              <circle cx="12" cy="18" r="3"/>
+              <circle cx="6" cy="6" r="3"/>
+              <circle cx="18" cy="6" r="3"/>
+              <path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/>
+              <path d="M12 12v3"/>
+            </svg>
+
+            ${repo.forks_count}
+
+          </span>
+
+        </div>
+
+
+        <span class="repo-updated mono">
+          Updated ${new Date(repo.updated_at).toLocaleDateString()}
+        </span>
+
+
+        <a
+          href="${repo.html_url}"
+          target="_blank"
+          rel="noopener"
+          class="repo-external-link"
+          aria-label="Open ${repo.full_name} on GitHub">
+
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+
+        </a>
+
+      </div>
+
+    </div>
+  `;
+}).join("");
+
+        // Generating HTMl 
         dataHTML += 
         `<section class="profile-overview">
         <div class="profile-card">
@@ -146,94 +280,10 @@
                                     
                                     <!-- 7. TOP REPOSITORIES SECTION -->
                                     <section class="repositories-section">
-                                    <div class="repo-grid">
-                                    <!-- Repo Card 1 -->
-                                    <div class="repo-card">
-                                    <div class="repo-card-top">
-                                    <div class="repo-title-wrapper">
-                                    <svg class="repo-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h12M6 10h12"/></svg>
-                                    <a href="#" class="repo-name">Spoon-Knife</a>
-                                    </div>
-                                    <span class="repo-badge">Public</span>
-                                    </div>
-                                    <p class="repo-description">This repo is for demonstration purposes only, heavily utilized for testing GitHub pull request workflows and tutorials.</p>
-                                    <div class="repo-meta-footer">
-                                    <span class="repo-lang"><span class="dot" style="background-color: #e34c26;"></span>HTML</span>
-                                    <div class="repo-stats-pills">
-                                        <span class="repo-stat">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                                        12.5k
-                                        </span>
-                                        <span class="repo-stat">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg>
-                                        80k
-                                        </span>
+                                        <div class="repo-grid">
+                                            ${repoHTML}
                                         </div>
-                                        <span class="repo-updated mono">Updated 3h ago</span>
-                                        <a href="#" target="_blank" rel="noopener" class="repo-external-link" aria-label="Open repository on GitHub">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                                        </a>
-                                        </div>
-                                        </div>
-                                        
-                                        <!-- Repo Card 2 -->
-                                        <div class="repo-card">
-                                        <div class="repo-card-top">
-                                        <div class="repo-title-wrapper">
-                                        <svg class="repo-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h12M6 10h12"/></svg>
-                                        <a href="#" class="repo-name">vercel-toolkit</a>
-                                        </div>
-                                        <span class="repo-badge">Public</span>
-                                        </div>
-                                        <p class="repo-description">Modern developer workflow extensions and edge utilities engineered for maximum performance and instant deployments.</p>
-                                        <div class="repo-meta-footer">
-                                        <span class="repo-lang"><span class="dot" style="background-color: #3178c6;"></span>TypeScript</span>
-                                        <div class="repo-stats-pills">
-                                        <span class="repo-stat">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                                            4.2k
-                                        </span>
-                                        <span class="repo-stat">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg>
-                                        610
-                                        </span>
-                                        </div>
-                                        <span class="repo-updated mono">Updated yesterday</span>
-                                        <a href="#" target="_blank" rel="noopener" class="repo-external-link" aria-label="Open repository on GitHub">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                                        </a>
-                                        </div>
-                                        </div>
-                                        
-                            <!-- Repo Card 3 -->
-                            <div class="repo-card">
-                                <div class="repo-card-top">
-                                <div class="repo-title-wrapper">
-                                        <svg class="repo-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h12M6 10h12"/></svg>
-                                        <a href="#" class="repo-name">gitscope-core</a>
-                                        </div>
-                                        <span class="repo-badge">Public</span>
-                                        </div>
-                                        <p class="repo-description">High-performance GitHub API client and caching layer optimized for fast analytical dashboard lookups.</p>
-                                        <div class="repo-meta-footer">
-                                        <span class="repo-lang"><span class="dot" style="background-color: #f1e05a;"></span>JavaScript</span>
-                                        <div class="repo-stats-pills">
-                                        <span class="repo-stat">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                                            890
-                                        </span>
-                                        <span class="repo-stat">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg>
-                                            145
-                                            </span>
-                                            </div>
-                                            <span class="repo-updated mono">Updated 3 days ago</span>
-                                            <a href="#" target="_blank" rel="noopener" class="repo-external-link" aria-label="Open repository on GitHub">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                                        </a>
-                                        </div>
-                                        </div>
-                                        </div>
+                                    </section>
                     </section>
                     
                     <!-- 9. CONTRIBUTION / ACTIVITY SECTION -->
@@ -280,7 +330,10 @@
                             </section>
         
         `
+
+    // INTEGRATING GENERATED HTML INTO BODY 
     document.body.querySelector(".dashboard-wrapper").innerHTML = dataHTML;
+    console.log(User_repo);
     }                    
     const Search = document.body.querySelector(".search-submit-btn")
                         
