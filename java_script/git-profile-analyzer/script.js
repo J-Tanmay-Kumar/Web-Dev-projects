@@ -11,16 +11,16 @@ async function display() {
   let repo_response = await fetch(Repo_URL);
   let repo_data = await repo_response.json();
   const User_repo = repo_data;
+
+  // Total Stars 
   const totalStars = User_repo.reduce((total, repo) => {
     return total + repo.stargazers_count;
   }, 0);
-
+  // Total forks 
   const totalforks = User_repo.reduce((total, repo) => {
     return total + repo.forks_count;
   }, 0)
-
-
-
+  // Langugages
   const languageCounts = {};
   let totalValidLanguages = 0; // 1. Keep track of the total valid entries
 
@@ -35,10 +35,8 @@ async function display() {
     languageCounts[language] = (languageCounts[language] ?? 0) + 1;
     totalValidLanguages += 1; // 2. Increment total count
   });
-
-  // 3. Calculate percentages for each language
+  //  percentages for each language
   const languagePercentages = {};
-
   Object.keys(languageCounts).forEach((language) => {
     const count = languageCounts[language];
 
@@ -50,10 +48,9 @@ async function display() {
       percentage: `${percentage}%`
     };
   });
-
   console.log(languagePercentages);
 
-
+  // Repo Html 
   const repoHTML = User_repo.map((repo) => {
 
     return `
@@ -182,6 +179,66 @@ async function display() {
   `;
   }).join("");
 
+// language html 
+// 1. Dictionary of GitHub's official colors for popular languages
+const languageColors = {
+    JavaScript: "#f1e05a",
+    TypeScript: "#3178c6",
+    Python: "#3572A5",
+    Ruby: "#701516",
+    CSS: "#563d7c",
+    HTML: "#e34c26",
+    Java: "#b07219",
+    Go: "#00ADD8",
+    Shell: "#89e051"
+};
+const defaultColor = "#858585"; // Fallback color if language isn't listed
+
+// 3. Initialize strings to collect our loop templates
+let barSegmentsHtml = "";
+let legendItemsHtml = "";
+
+// 4. Loop through the entries to dynamically build the DOM pieces
+Object.entries(languagePercentages).forEach(([language, data]) => {
+    // Pick the matching color or use the fallback default
+    const color = languageColors[language] || defaultColor;
+    const percentStr = data.percentage; // e.g., "45.2%"
+
+    // Build the visual bar segments
+    barSegmentsHtml += `
+        <div class="lang-segment" 
+             style="width: ${percentStr}; background-color: ${color};" 
+             title="${language}: ${percentStr}">
+        </div>`;
+
+    // Build the text legend items below the bar
+    legendItemsHtml += `
+        <div class="legend-item">
+            <span class="dot" style="background-color: ${color};"></span>
+            ${language} <span class="mono">${percentStr}</span>
+        </div>`;
+});
+
+// 5. Wrap everything inside your target section markup
+const finalSectionHtml = `
+    <div class="section-header-box">
+        <h3 class="section-title">Language Distribution</h3>
+        <span class="section-subtitle">Top programming languages used across public repositories</span>
+    </div>
+    <div class="language-card">
+        <div class="lang-bar-container">
+            ${barSegmentsHtml}
+        </div>
+        <div class="lang-legend">
+            ${legendItemsHtml}
+        </div>
+    </div>
+`;
+
+// 6. Inject the generated HTML into your webpage container
+// Example: document.getElementById('profile-container').innerHTML = finalSectionHtml;
+console.log(finalSectionHtml);
+
   // Generating HTMl 
   dataHTML +=
     `<section class="profile-overview">
@@ -277,26 +334,7 @@ async function display() {
                                     
                                     <!-- 6. LANGUAGE / TECHNOLOGY SECTION -->
                                     <section class="languages-section">
-                                    <div class="section-header-box">
-                                    <h3 class="section-title">Language Distribution</h3>
-                                    <span class="section-subtitle">Top programming languages used across public repositories</span>
-                                    </div>
-                                    <div class="language-card">
-                                    <div class="lang-bar-container">
-                                    <div class="lang-segment" style="width: 45.2%; background-color: #3178c6;" title="TypeScript: 45.2%"></div>
-                                    <div class="lang-segment" style="width: 30.1%; background-color: #f1e05a;" title="JavaScript: 30.1%"></div>
-                                    <div class="lang-segment" style="width: 15.7%; background-color: #701516;" title="Ruby: 15.7%"></div>
-                                    <div class="lang-segment" style="width: 5.5%; background-color: #563d7c;" title="CSS: 5.5%"></div>
-                                    <div class="lang-segment" style="width: 3.5%; background-color: #89e051;" title="Shell: 3.5%"></div>
-                                    </div>
-                                    <div class="lang-legend">
-                                    <div class="legend-item"><span class="dot" style="background-color: #3178c6;"></span>TypeScript <span class="mono">45.2%</span></div>
-                                    <div class="legend-item"><span class="dot" style="background-color: #f1e05a;"></span>JavaScript <span class="mono">30.1%</span></div>
-                                    <div class="legend-item"><span class="dot" style="background-color: #701516;"></span>Ruby <span class="mono">15.7%</span></div>
-                                    <div class="legend-item"><span class="dot" style="background-color: #563d7c;"></span>CSS <span class="mono">5.5%</span></div>
-                                    <div class="legend-item"><span class="dot" style="background-color: #89e051;"></span>Shell <span class="mono">3.5%</span></div>
-                                    </div>
-                                    </div>
+                                      ${finalSectionHtml}
                                     </section>
                                     
                                     <!-- 8. REPOSITORY SEARCH / FILTER BAR -->
