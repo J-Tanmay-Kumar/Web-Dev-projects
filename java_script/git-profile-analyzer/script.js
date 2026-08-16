@@ -15,9 +15,44 @@ async function display() {
     return total + repo.stargazers_count;
   }, 0);
 
-  const totalforks = User_repo.reduce((total,repo)=>{
-    return total+repo.forks_count;
-  },0)
+  const totalforks = User_repo.reduce((total, repo) => {
+    return total + repo.forks_count;
+  }, 0)
+
+
+
+  const languageCounts = {};
+  let totalValidLanguages = 0; // 1. Keep track of the total valid entries
+
+  User_repo.forEach((repo) => {
+    const language = repo.language;
+
+    if (language === null) {
+      return;
+    }
+
+    // Dynamic count update
+    languageCounts[language] = (languageCounts[language] ?? 0) + 1;
+    totalValidLanguages += 1; // 2. Increment total count
+  });
+
+  // 3. Calculate percentages for each language
+  const languagePercentages = {};
+
+  Object.keys(languageCounts).forEach((language) => {
+    const count = languageCounts[language];
+
+    // Calculates percentage and rounds to 1 decimal place (e.g., 42.5)
+    const percentage = ((count / totalValidLanguages) * 100).toFixed(1);
+
+    languagePercentages[language] = {
+      count: count,
+      percentage: `${percentage}%`
+    };
+  });
+
+  console.log(languagePercentages);
+
 
   const repoHTML = User_repo.map((repo) => {
 
