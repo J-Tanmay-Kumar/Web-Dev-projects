@@ -1,18 +1,27 @@
-    const URL = "https://api.github.com/users/octocat";
-    
-    let dataHTML = '';
-    async function display() {
-        let response = await fetch(URL)
-        let data = await response.json();
-        const UserDetails = data;
+const URL = "https://api.github.com/users/octocat";
 
-        // REPO_DATA
-        const Repo_URL = data.repos_url;
-        let repo_response = await fetch(Repo_URL);
-        let repo_data = await repo_response.json();
-        const User_repo = repo_data; 
-const repoHTML = User_repo.map((repo) => {
-  return `
+let dataHTML = '';
+async function display() {
+  let response = await fetch(URL)
+  let data = await response.json();
+  const UserDetails = data;
+
+  // REPO_DATA
+  const Repo_URL = data.repos_url;
+  let repo_response = await fetch(Repo_URL);
+  let repo_data = await repo_response.json();
+  const User_repo = repo_data;
+  const totalStars = User_repo.reduce((total, repo) => {
+    return total + repo.stargazers_count;
+  }, 0);
+
+  const totalforks = User_repo.reduce((total,repo)=>{
+    return total+repo.forks_count;
+  },0)
+
+  const repoHTML = User_repo.map((repo) => {
+
+    return `
     <div class="repo-card">
 
       <div class="repo-card-top">
@@ -136,11 +145,11 @@ const repoHTML = User_repo.map((repo) => {
 
     </div>
   `;
-}).join("");
+  }).join("");
 
-        // Generating HTMl 
-        dataHTML += 
-        `<section class="profile-overview">
+  // Generating HTMl 
+  dataHTML +=
+    `<section class="profile-overview">
         <div class="profile-card">
         <div class="profile-left">
         <img src="${UserDetails.avatar_url}" alt="User Avatar" class="profile-avatar" id="profile-avatar">
@@ -209,7 +218,7 @@ const repoHTML = User_repo.map((repo) => {
                                 <span class="stat-label">Total Stars</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                                 </div>
-                                <div class="stat-value mono" id="stat-stars">1,482</div>
+                                <div class="stat-value mono" id="stat-stars">${totalStars}</div>
                                 <span class="stat-context">Across all repositories</span>
                                 </div>
                                 <div class="stat-card">
@@ -217,7 +226,7 @@ const repoHTML = User_repo.map((repo) => {
                                 <span class="stat-label">Total Forks</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg>
                                 </div>
-                                <div class="stat-value mono" id="stat-forks">517</div>
+                                <div class="stat-value mono" id="stat-forks">${totalforks}</div>
                                 <span class="stat-context">Community forks</span>
                                 </div>
                                 <div class="stat-card">
@@ -331,14 +340,13 @@ const repoHTML = User_repo.map((repo) => {
         
         `
 
-    // INTEGRATING GENERATED HTML INTO BODY 
-    document.body.querySelector(".dashboard-wrapper").innerHTML = dataHTML;
-    console.log(User_repo);
-    }                    
-    const Search = document.body.querySelector(".search-submit-btn")
-                        
-    Search.addEventListener("click", () => {
-    document.body.querySelector(".dashboard-wrapper").classList.remove("hidden")
-    display();
-    })
-                        
+  // INTEGRATING GENERATED HTML INTO BODY 
+  document.body.querySelector(".dashboard-wrapper").innerHTML = dataHTML;
+}
+const Search = document.body.querySelector(".search-submit-btn")
+
+Search.addEventListener("click", () => {
+  document.querySelector(".main-content .state-container")?.remove();
+  document.body.querySelector(".dashboard-wrapper").classList.remove("hidden")
+  display();
+})
