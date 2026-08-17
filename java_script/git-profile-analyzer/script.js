@@ -12,7 +12,7 @@ async function display() {
   const Repo_URL = data.repos_url;
   let repo_response = await fetch(Repo_URL);
   let repo_data = await repo_response.json();
-  
+
   // Assign to global variable
   globalUserRepos = repo_data;
 
@@ -271,6 +271,8 @@ async function display() {
 
   // Attach search listener dynamically after rendering elements
   attachSearchListener();
+  // Attach clear filters listener
+  Filtering();
 }
 
 // Reusable function to render repository cards
@@ -356,4 +358,24 @@ if (Search) {
     document.body.querySelector(".dashboard-wrapper").classList.remove("hidden");
     display();
   });
+}
+function Filtering() {
+const sortSelect = document.getElementById("sort-select");
+sortSelect.addEventListener("change", () => {
+
+    const sortValue = sortSelect.value;
+
+    if (sortValue === "stars") {
+
+        const sortedRepos = [...globalUserRepos];
+
+        sortedRepos.sort((a, b) => {
+            return b.stargazers_count - a.stargazers_count;
+        });
+
+        console.log(sortedRepos);
+        renderRepositories(sortedRepos)
+    }
+
+});
 }
