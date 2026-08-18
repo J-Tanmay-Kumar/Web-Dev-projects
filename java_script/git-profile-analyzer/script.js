@@ -416,3 +416,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+const clearFilterBtn = document.getElementById("clear-filter-btn");
+
+clearFilterBtn.addEventListener("click", () => {
+    // clear search
+    const searchInput = document.getElementById("repo-search-input");
+    if (searchInput) {
+        searchInput.value = "";
+    }
+
+    // reset sort
+    const sortSelect = document.getElementById("sort-select");
+    if (sortSelect) {
+        sortSelect.value = "stars";
+    }
+
+    // render all repositories
+    renderRepositories(globalUserRepos);
+});
