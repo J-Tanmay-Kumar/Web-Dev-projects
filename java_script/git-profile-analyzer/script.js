@@ -264,15 +264,18 @@ async function display() {
   `;
 
   // Inject dashboard HTML into DOM
-  document.body.querySelector(".dashboard-wrapper").innerHTML = dataHTML;
+  const dashboardWrapper = document.querySelector(".dashboard-wrapper");
+  if (dashboardWrapper) {
+    dashboardWrapper.innerHTML = dataHTML;
+  }
 
   // Render initial repository list
   renderRepositories(globalUserRepos);
 
-  // Attach search listener dynamically after rendering elements
+  // Attach dynamic event listeners after DOM elements are created
   attachSearchListener();
-  // Attach clear filters listener
-  Filtering();
+  attachSortListener();
+  attachClearFilterListener();
 }
 
 // Reusable function to render repository cards
@@ -349,33 +352,67 @@ function attachSearchListener() {
   }
 }
 
-// App execution setup
-const Search = document.body.querySelector(".search-submit-btn");
+// Sort listener implementation
+function attachSortListener() {
+  const sortSelect = document.getElementById('sort-select');
 
-if (Search) {
-  Search.addEventListener("click", () => {
-    document.querySelector(".main-content .state-container")?.remove();
-    document.body.querySelector(".dashboard-wrapper").classList.remove("hidden");
-    display();
-  });
+  if (sortSelect) {
+    sortSelect.addEventListener("change", () => {
+      const sorted = sortRepositories(globalUserRepos, sortSelect.value);
+      renderRepositories(sorted);
+    });
+  }
 }
-function Filtering() {
-const sortSelect = document.getElementById("sort-select");
-sortSelect.addEventListener("change", () => {
 
-    const sortValue = sortSelect.value;
+// Sort repositories utility
+function sortRepositories(repos, sortValue) {
+  const sortedRepos = [...repos];
 
-    if (sortValue === "stars") {
+  if (sortValue === "stars") {
+    sortedRepos.sort((a, b) => b.stargazers_count - a.stargazers_count);
+  }
+  if (sortValue === "forks") {
+    sortedRepos.sort((a, b) => b.forks_count - a.forks_count);
+  }
+  if (sortValue === "updated") {
+    sortedRepos.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+  }
+  if (sortValue === "name") {
+    sortedRepos.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  }
 
-        const sortedRepos = [...globalUserRepos];
+  return sortedRepos;
+}
 
-        sortedRepos.sort((a, b) => {
-            return b.stargazers_count - a.stargazers_count;
-        });
+// Clear filter button listener
+function attachClearFilterListener() {
+  const clearBtn = document.getElementById("clear-filter-btn");
+  const searchInput = document.getElementById("repo-search-input");
+  const sortSelect = document.getElementById("sort-select");
 
-        console.log(sortedRepos);
-        renderRepositories(sortedRepos)
-    }
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      if (searchInput) searchInput.value = "";
+      if (sortSelect) sortSelect.value = "stars";
+      renderRepositories(globalUserRepos);
+    });
+  }
+}
 
+// Search button execution setup
+document.addEventListener("DOMContentLoaded", () => {
+  const searchBtn = document.querySelector(".search-submit-btn");
+
+  if (searchBtn) {
+    searchBtn.addEventListener("click", () => {
+      document.querySelector(".main-content .state-container")?.remove();
+      
+      const dashboardWrapper = document.querySelector(".dashboard-wrapper");
+      if (dashboardWrapper) {
+        dashboardWrapper.classList.remove("hidden");
+      }
+      
+      display();
+    });
+  }
 });
-}
