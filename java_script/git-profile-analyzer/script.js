@@ -345,6 +345,7 @@ function attachSearchListener() {
         const langMatch = repo.language?.toLowerCase().includes(searchTerm);
 
         return nameMatch || fullNameMatch || descMatch || langMatch;
+        updateRepositories()
       });
 
       renderRepositories(filteredRepos);
@@ -360,6 +361,7 @@ function attachSortListener() {
     sortSelect.addEventListener("change", () => {
       const sorted = sortRepositories(globalUserRepos, sortSelect.value);
       renderRepositories(sorted);
+      updateRepositories();
     });
   }
 }
@@ -395,6 +397,7 @@ function attachClearFilterListener() {
       if (searchInput) searchInput.value = "";
       if (sortSelect) sortSelect.value = "stars";
       renderRepositories(globalUserRepos);
+      updateRepositories();
     });
   }
 }
@@ -435,3 +438,24 @@ clearFilterBtn.addEventListener("click", () => {
     // render all repositories
     renderRepositories(globalUserRepos);
 });
+
+function updateRepositories() {
+
+    // 1. Get search value
+    const searchValue = document.getElementById("repo-search-input").value;
+
+    // 2. Filter globalUserRepos
+    const filteredRepos = globalUserRepos.filter(repo => 
+        repo.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+        repo.description?.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
+    // 3. Get selected sort value
+    const sortValue = document.getElementById("sort-select").value;
+
+    // 4. Sort the filtered repositories
+    const sortedRepos = sortRepositories(filteredRepos, sortValue);
+
+    // 5. Render the final result
+    renderRepositories(sortedRepos);
+}
