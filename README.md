@@ -1041,3 +1041,93 @@ cd Task-management-app
 - **Clear completed** button has no event listener wired up
 - `data/task.js` ships with an empty `tasks` array, so the app starts blank on first load with no sample data to reference
 - Only a click listener is attached to the submit button — no `submit` listener on `.task-form` itself, which is a less resilient pattern than handling the form's native submit event
+
+# BrainRush — Quiz App
+
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![ES6 Modules](https://img.shields.io/badge/ES6-Modules-orange?style=flat)
+
+A single-page multiple-choice quiz built with vanilla JavaScript ES6 modules. Questions are loaded from a data module, answered one at a time with a submit/next flow, and scored at the end with an option to restart.
+
+---
+
+## Features
+
+- Start screen that swaps out for the quiz view on click
+- One question at a time, rendered from a question bank
+- Multiple-choice options using styled radio inputs
+- Submit locks in an answer and shows a "Submitted" confirmation before moving on
+- Score tracked internally and revealed on a final results screen
+- Restart button resets state and starts the quiz over
+- Single delegated click listener handles Submit, Next, and Restart actions
+- Responsive card layout with a gradient background
+
+---
+<img width="1916" height="1071" alt="Screenshot 2026-08-20 192142" src="https://github.com/user-attachments/assets/3f7c858d-1eaf-4b8b-9e6f-a8c17d10339f" />
+
+## How it works — step by step
+
+**Step 1 — Initial state**
+An `state` object holds `currentQuestionIndex`, `score`, and `hasSubmitted`, along with a `reset()` method used when restarting the quiz.
+
+**Step 2 — Start button**
+Clicking `.Start-btn` replaces the original `.Container` element with a new, empty `.newContainer` element (via `replaceWith()`), then calls `renderQuestion()` to draw the first question into it.
+
+**Step 3 — renderQuestion()**
+Reads `questions[state.currentQuestionIndex]`. If there's no question left at that index, it renders the "Quiz Completed" screen instead, showing the final score and a Restart button. Otherwise, it maps each option into a radio input/label pair, and injects the question, options, a hidden "Submitted" message, and the Submit/Next buttons into `.newContainer` via `innerHTML`.
+
+**Step 4 — Event delegation**
+A single click listener is attached to `.newContainer` once, during setup. Instead of re-attaching listeners after every render, it checks `event.target`'s class on each click and routes to `handleSubmission()`, `handleNextQuestion()`, or the restart logic — so it keeps working after `innerHTML` rewrites the DOM.
+
+**Step 5 — handleSubmission()**
+Guards against double submission using `state.hasSubmitted`. Finds the checked radio input; if none is selected, alerts the user. Otherwise compares the selected value to `currentData.answer`, increments `state.score` on a correct answer, sets `hasSubmitted = true`, and reveals the "Submitted" confirmation by adding a CSS class.
+
+**Step 6 — handleNextQuestion()**
+Blocks advancing with an alert if the current question hasn't been submitted yet. Otherwise increments `currentQuestionIndex`, resets `hasSubmitted` to `false` for the next question, and calls `renderQuestion()` again.
+
+**Step 7 — Restart**
+Clicking `.Restart-btn` (shown only on the completed screen) calls `state.reset()` and `renderQuestion()`, taking the user back to question one with the score cleared.
+
+---
+<img width="1474" height="1760" alt="image" src="https://github.com/user-attachments/assets/686dfaf7-5d39-49d0-bb5a-a93fcadb95f1" />
+
+
+## Folder structure
+
+```
+Quiz-App/
+├── index.html         # Entry point — start screen container
+├── style.css           # Layout, card styling, button and radio states
+├── script.js           # App state, rendering, and event handling
+└── Questions.js        # Question bank (question, options, answer)
+```
+
+---
+
+## Design system
+
+The CSS keeps a consistent card-based layout across both the start screen and the quiz screen, with shared classes (`.Container` / `.newContainer`) for the outer card, distinct button colors for Submit (green) and Next (dark gray), and a `:has()` selector to highlight the selected answer's label.
+
+---
+
+## Run locally
+
+```bash
+git clone <your-repo-url>
+cd Quiz-App
+# Open index.html via Live Server (required for ES6 modules)
+```
+
+ES6 `import` doesn't work over `file://`. Use VS Code Live Server or any local dev server.
+
+---
+
+## Known issues / things to improve
+
+- `checkmark.png`, referenced in the "Submitted" confirmation, isn't included in the project — the image will show as broken until it's added
+- Score and progress (e.g. "Question 3 of 8") aren't shown while the quiz is in progress — only the final score is displayed at the end
+- `label:has()` is a relatively modern CSS selector; older browsers without `:has()` support won't show the selected-answer highlight
+- No keyboard-only or screen-reader-specific handling beyond native radio/label semantics — the "Submitted" message isn't announced to assistive tech when it appears
+- Alerts (`alert(...)`) are used for validation messages, which is a blocking UX pattern — an inline message would be less disruptive
